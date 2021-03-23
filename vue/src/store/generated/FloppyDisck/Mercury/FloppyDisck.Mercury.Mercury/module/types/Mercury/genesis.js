@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Purchase } from "../Mercury/purchase";
 import { Listing } from "../Mercury/listing";
 import { Account } from "../Mercury/account";
 import { Writer, Reader } from "protobufjs/minimal";
@@ -6,6 +7,9 @@ export const protobufPackage = "FloppyDisck.Mercury.Mercury";
 const baseGenesisState = {};
 export const GenesisState = {
     encode(message, writer = Writer.create()) {
+        for (const v of message.purchaseList) {
+            Purchase.encode(v, writer.uint32(26).fork()).ldelim();
+        }
         for (const v of message.listingList) {
             Listing.encode(v, writer.uint32(18).fork()).ldelim();
         }
@@ -18,11 +22,15 @@ export const GenesisState = {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = { ...baseGenesisState };
+        message.purchaseList = [];
         message.listingList = [];
         message.accountList = [];
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
+                case 3:
+                    message.purchaseList.push(Purchase.decode(reader, reader.uint32()));
+                    break;
                 case 2:
                     message.listingList.push(Listing.decode(reader, reader.uint32()));
                     break;
@@ -38,8 +46,14 @@ export const GenesisState = {
     },
     fromJSON(object) {
         const message = { ...baseGenesisState };
+        message.purchaseList = [];
         message.listingList = [];
         message.accountList = [];
+        if (object.purchaseList !== undefined && object.purchaseList !== null) {
+            for (const e of object.purchaseList) {
+                message.purchaseList.push(Purchase.fromJSON(e));
+            }
+        }
         if (object.listingList !== undefined && object.listingList !== null) {
             for (const e of object.listingList) {
                 message.listingList.push(Listing.fromJSON(e));
@@ -54,6 +68,12 @@ export const GenesisState = {
     },
     toJSON(message) {
         const obj = {};
+        if (message.purchaseList) {
+            obj.purchaseList = message.purchaseList.map((e) => e ? Purchase.toJSON(e) : undefined);
+        }
+        else {
+            obj.purchaseList = [];
+        }
         if (message.listingList) {
             obj.listingList = message.listingList.map((e) => e ? Listing.toJSON(e) : undefined);
         }
@@ -70,8 +90,14 @@ export const GenesisState = {
     },
     fromPartial(object) {
         const message = { ...baseGenesisState };
+        message.purchaseList = [];
         message.listingList = [];
         message.accountList = [];
+        if (object.purchaseList !== undefined && object.purchaseList !== null) {
+            for (const e of object.purchaseList) {
+                message.purchaseList.push(Purchase.fromPartial(e));
+            }
+        }
         if (object.listingList !== undefined && object.listingList !== null) {
             for (const e of object.listingList) {
                 message.listingList.push(Listing.fromPartial(e));

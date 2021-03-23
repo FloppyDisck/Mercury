@@ -9,6 +9,10 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
+	cdc.RegisterConcrete(&MsgCreatePurchase{}, "Mercury/CreatePurchase", nil)
+	cdc.RegisterConcrete(&MsgUpdatePurchase{}, "Mercury/UpdatePurchase", nil)
+	cdc.RegisterConcrete(&MsgDeletePurchase{}, "Mercury/DeletePurchase", nil)
+
 	cdc.RegisterConcrete(&MsgCreateListing{}, "Mercury/CreateListing", nil)
 	cdc.RegisterConcrete(&MsgUpdateListing{}, "Mercury/UpdateListing", nil)
 	cdc.RegisterConcrete(&MsgDeleteListing{}, "Mercury/DeleteListing", nil)
@@ -21,6 +25,11 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCreatePurchase{},
+		&MsgUpdatePurchase{},
+		&MsgDeletePurchase{},
+	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateListing{},
 		&MsgUpdateListing{},

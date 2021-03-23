@@ -47,3 +47,10 @@ const (
 	ListingNameKey   = "Listing-name-"
 	ListingCountKey  = "Listing-count-"
 )
+
+const (
+	PurchaseKey        = "Purchase-value-"
+	PurchaseListingKey = "Purchase-listing-"
+	PurchaseBuyerKey   = "Purchase-buyer-key-"
+	PurchaseCountKey   = "Purchase-count-"
+)

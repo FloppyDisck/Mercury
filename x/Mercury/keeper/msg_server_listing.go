@@ -21,6 +21,8 @@ func (k msgServer) CreateListing(goCtx context.Context, msg *types.MsgCreateList
 		msg.Description,
 	)
 
+	//TODO: validate the currency
+
 	return &types.MsgCreateListingResponse{
 		Id: id,
 	}, nil

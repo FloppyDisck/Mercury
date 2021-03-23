@@ -265,11 +265,66 @@ export class Api extends HttpClient {
          *
          * @tags Query
          * @name QueryListing
-         * @summary this line is used by starport scaffolding # 2
          * @request GET:/FloppyDisck/Mercury/Mercury/listing/{id}
          */
         this.queryListing = (id, params = {}) => this.request({
             path: `/FloppyDisck/Mercury/Mercury/listing/${id}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryPurchaseAll
+         * @request GET:/FloppyDisck/Mercury/Mercury/purchase
+         */
+        this.queryPurchaseAll = (query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/purchase`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryPurchaseWithBuyer
+         * @request GET:/FloppyDisck/Mercury/Mercury/purchase/buyer/{buyer}
+         */
+        this.queryPurchaseWithBuyer = (buyer, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/purchase/buyer/${buyer}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryPurchaseWithListing
+         * @request GET:/FloppyDisck/Mercury/Mercury/purchase/listing/{listing}
+         */
+        this.queryPurchaseWithListing = (listing, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/purchase/listing/${listing}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryPurchase
+         * @summary this line is used by starport scaffolding # 2
+         * @request GET:/FloppyDisck/Mercury/Mercury/purchase/{id}
+         */
+        this.queryPurchase = (id, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/purchase/${id}`,
             method: "GET",
             format: "json",
             ...params,

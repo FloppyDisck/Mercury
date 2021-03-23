@@ -1,9 +1,31 @@
 import { Reader, Writer } from "protobufjs/minimal";
-import { Listing } from "../Mercury/listing";
+import { Purchase } from "../Mercury/purchase";
 import { PageRequest, PageResponse } from "../cosmos/base/query/v1beta1/pagination";
+import { Listing } from "../Mercury/listing";
 import { Account } from "../Mercury/account";
 export declare const protobufPackage = "FloppyDisck.Mercury.Mercury";
 /** this line is used by starport scaffolding # 3 */
+export interface QueryGetPurchaseRequest {
+    id: number;
+}
+export interface QueryGetPurchaseResponse {
+    Purchase: Purchase | undefined;
+}
+export interface QueryAllPurchaseRequest {
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllPurchaseWithListingRequest {
+    listing: number;
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllPurchaseWithBuyerRequest {
+    buyer: string;
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllPurchaseResponse {
+    Purchase: Purchase[];
+    pagination: PageResponse | undefined;
+}
 export interface QueryGetListingRequest {
     id: number;
 }
@@ -53,6 +75,48 @@ export interface QueryAllAccountResponse {
     Account: Account[];
     pagination: PageResponse | undefined;
 }
+export declare const QueryGetPurchaseRequest: {
+    encode(message: QueryGetPurchaseRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetPurchaseRequest;
+    fromJSON(object: any): QueryGetPurchaseRequest;
+    toJSON(message: QueryGetPurchaseRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetPurchaseRequest>): QueryGetPurchaseRequest;
+};
+export declare const QueryGetPurchaseResponse: {
+    encode(message: QueryGetPurchaseResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetPurchaseResponse;
+    fromJSON(object: any): QueryGetPurchaseResponse;
+    toJSON(message: QueryGetPurchaseResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetPurchaseResponse>): QueryGetPurchaseResponse;
+};
+export declare const QueryAllPurchaseRequest: {
+    encode(message: QueryAllPurchaseRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllPurchaseRequest;
+    fromJSON(object: any): QueryAllPurchaseRequest;
+    toJSON(message: QueryAllPurchaseRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllPurchaseRequest>): QueryAllPurchaseRequest;
+};
+export declare const QueryAllPurchaseWithListingRequest: {
+    encode(message: QueryAllPurchaseWithListingRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllPurchaseWithListingRequest;
+    fromJSON(object: any): QueryAllPurchaseWithListingRequest;
+    toJSON(message: QueryAllPurchaseWithListingRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllPurchaseWithListingRequest>): QueryAllPurchaseWithListingRequest;
+};
+export declare const QueryAllPurchaseWithBuyerRequest: {
+    encode(message: QueryAllPurchaseWithBuyerRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllPurchaseWithBuyerRequest;
+    fromJSON(object: any): QueryAllPurchaseWithBuyerRequest;
+    toJSON(message: QueryAllPurchaseWithBuyerRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllPurchaseWithBuyerRequest>): QueryAllPurchaseWithBuyerRequest;
+};
+export declare const QueryAllPurchaseResponse: {
+    encode(message: QueryAllPurchaseResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllPurchaseResponse;
+    fromJSON(object: any): QueryAllPurchaseResponse;
+    toJSON(message: QueryAllPurchaseResponse): unknown;
+    fromPartial(object: DeepPartial<QueryAllPurchaseResponse>): QueryAllPurchaseResponse;
+};
 export declare const QueryGetListingRequest: {
     encode(message: QueryGetListingRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryGetListingRequest;
@@ -154,6 +218,10 @@ export declare const QueryAllAccountResponse: {
 /** Query defines the gRPC querier service. */
 export interface Query {
     /** this line is used by starport scaffolding # 2 */
+    Purchase(request: QueryGetPurchaseRequest): Promise<QueryGetPurchaseResponse>;
+    PurchaseAll(request: QueryAllPurchaseRequest): Promise<QueryAllPurchaseResponse>;
+    PurchaseWithListing(request: QueryAllPurchaseWithListingRequest): Promise<QueryAllPurchaseResponse>;
+    PurchaseWithBuyer(request: QueryAllPurchaseWithBuyerRequest): Promise<QueryAllPurchaseResponse>;
     Listing(request: QueryGetListingRequest): Promise<QueryGetListingResponse>;
     ListingAll(request: QueryAllListingRequest): Promise<QueryAllListingResponse>;
     ListingWithSeller(request: QueryAllListingWithSellerRequest): Promise<QueryAllListingResponse>;
@@ -168,6 +236,10 @@ export interface Query {
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
     constructor(rpc: Rpc);
+    Purchase(request: QueryGetPurchaseRequest): Promise<QueryGetPurchaseResponse>;
+    PurchaseAll(request: QueryAllPurchaseRequest): Promise<QueryAllPurchaseResponse>;
+    PurchaseWithListing(request: QueryAllPurchaseWithListingRequest): Promise<QueryAllPurchaseResponse>;
+    PurchaseWithBuyer(request: QueryAllPurchaseWithBuyerRequest): Promise<QueryAllPurchaseResponse>;
     Listing(request: QueryGetListingRequest): Promise<QueryGetListingResponse>;
     ListingAll(request: QueryAllListingRequest): Promise<QueryAllListingResponse>;
     ListingWithSeller(request: QueryAllListingWithSellerRequest): Promise<QueryAllListingResponse>;

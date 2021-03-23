@@ -1,3 +1,4 @@
+import { Purchase } from "../Mercury/purchase";
 import { Listing } from "../Mercury/listing";
 import { Account } from "../Mercury/account";
 import { Writer, Reader } from "protobufjs/minimal";
@@ -5,6 +6,8 @@ export declare const protobufPackage = "FloppyDisck.Mercury.Mercury";
 /** GenesisState defines the capability module's genesis state. */
 export interface GenesisState {
     /** this line is used by starport scaffolding # genesis/proto/state */
+    purchaseList: Purchase[];
+    /** this line is used by starport scaffolding # genesis/proto/stateField */
     listingList: Listing[];
     /** this line is used by starport scaffolding # genesis/proto/stateField */
     accountList: Account[];

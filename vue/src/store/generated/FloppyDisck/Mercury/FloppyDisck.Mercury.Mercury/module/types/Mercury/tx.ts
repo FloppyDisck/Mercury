@@ -5,6 +5,31 @@ import * as Long from "long";
 export const protobufPackage = "FloppyDisck.Mercury.Mercury";
 
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgCreatePurchase {
+  creator: string;
+  listing: number;
+  description: string;
+}
+
+export interface MsgCreatePurchaseResponse {
+  id: number;
+}
+
+export interface MsgUpdatePurchase {
+  creator: string;
+  id: number;
+  description: string;
+}
+
+export interface MsgUpdatePurchaseResponse {}
+
+export interface MsgDeletePurchase {
+  creator: string;
+  id: number;
+}
+
+export interface MsgDeletePurchaseResponse {}
+
 export interface MsgCreateListing {
   creator: string;
   amount: number;
@@ -58,6 +83,435 @@ export interface MsgDeleteAccount {
 }
 
 export interface MsgDeleteAccountResponse {}
+
+const baseMsgCreatePurchase: object = {
+  creator: "",
+  listing: 0,
+  description: "",
+};
+
+export const MsgCreatePurchase = {
+  encode(message: MsgCreatePurchase, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.listing !== 0) {
+      writer.uint32(16).uint64(message.listing);
+    }
+    if (message.description !== "") {
+      writer.uint32(26).string(message.description);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgCreatePurchase {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgCreatePurchase } as MsgCreatePurchase;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.listing = longToNumber(reader.uint64() as Long);
+          break;
+        case 3:
+          message.description = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreatePurchase {
+    const message = { ...baseMsgCreatePurchase } as MsgCreatePurchase;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.listing !== undefined && object.listing !== null) {
+      message.listing = Number(object.listing);
+    } else {
+      message.listing = 0;
+    }
+    if (object.description !== undefined && object.description !== null) {
+      message.description = String(object.description);
+    } else {
+      message.description = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgCreatePurchase): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.listing !== undefined && (obj.listing = message.listing);
+    message.description !== undefined &&
+      (obj.description = message.description);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgCreatePurchase>): MsgCreatePurchase {
+    const message = { ...baseMsgCreatePurchase } as MsgCreatePurchase;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.listing !== undefined && object.listing !== null) {
+      message.listing = object.listing;
+    } else {
+      message.listing = 0;
+    }
+    if (object.description !== undefined && object.description !== null) {
+      message.description = object.description;
+    } else {
+      message.description = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgCreatePurchaseResponse: object = { id: 0 };
+
+export const MsgCreatePurchaseResponse = {
+  encode(
+    message: MsgCreatePurchaseResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgCreatePurchaseResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgCreatePurchaseResponse,
+    } as MsgCreatePurchaseResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreatePurchaseResponse {
+    const message = {
+      ...baseMsgCreatePurchaseResponse,
+    } as MsgCreatePurchaseResponse;
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id);
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgCreatePurchaseResponse): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<MsgCreatePurchaseResponse>
+  ): MsgCreatePurchaseResponse {
+    const message = {
+      ...baseMsgCreatePurchaseResponse,
+    } as MsgCreatePurchaseResponse;
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+};
+
+const baseMsgUpdatePurchase: object = { creator: "", id: 0, description: "" };
+
+export const MsgUpdatePurchase = {
+  encode(message: MsgUpdatePurchase, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
+    if (message.description !== "") {
+      writer.uint32(42).string(message.description);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgUpdatePurchase {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgUpdatePurchase } as MsgUpdatePurchase;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        case 5:
+          message.description = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUpdatePurchase {
+    const message = { ...baseMsgUpdatePurchase } as MsgUpdatePurchase;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id);
+    } else {
+      message.id = 0;
+    }
+    if (object.description !== undefined && object.description !== null) {
+      message.description = String(object.description);
+    } else {
+      message.description = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgUpdatePurchase): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = message.id);
+    message.description !== undefined &&
+      (obj.description = message.description);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgUpdatePurchase>): MsgUpdatePurchase {
+    const message = { ...baseMsgUpdatePurchase } as MsgUpdatePurchase;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = 0;
+    }
+    if (object.description !== undefined && object.description !== null) {
+      message.description = object.description;
+    } else {
+      message.description = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgUpdatePurchaseResponse: object = {};
+
+export const MsgUpdatePurchaseResponse = {
+  encode(
+    _: MsgUpdatePurchaseResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgUpdatePurchaseResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgUpdatePurchaseResponse,
+    } as MsgUpdatePurchaseResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUpdatePurchaseResponse {
+    const message = {
+      ...baseMsgUpdatePurchaseResponse,
+    } as MsgUpdatePurchaseResponse;
+    return message;
+  },
+
+  toJSON(_: MsgUpdatePurchaseResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgUpdatePurchaseResponse>
+  ): MsgUpdatePurchaseResponse {
+    const message = {
+      ...baseMsgUpdatePurchaseResponse,
+    } as MsgUpdatePurchaseResponse;
+    return message;
+  },
+};
+
+const baseMsgDeletePurchase: object = { creator: "", id: 0 };
+
+export const MsgDeletePurchase = {
+  encode(message: MsgDeletePurchase, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgDeletePurchase {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgDeletePurchase } as MsgDeletePurchase;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgDeletePurchase {
+    const message = { ...baseMsgDeletePurchase } as MsgDeletePurchase;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id);
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgDeletePurchase): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgDeletePurchase>): MsgDeletePurchase {
+    const message = { ...baseMsgDeletePurchase } as MsgDeletePurchase;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+};
+
+const baseMsgDeletePurchaseResponse: object = {};
+
+export const MsgDeletePurchaseResponse = {
+  encode(
+    _: MsgDeletePurchaseResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgDeletePurchaseResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgDeletePurchaseResponse,
+    } as MsgDeletePurchaseResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgDeletePurchaseResponse {
+    const message = {
+      ...baseMsgDeletePurchaseResponse,
+    } as MsgDeletePurchaseResponse;
+    return message;
+  },
+
+  toJSON(_: MsgDeletePurchaseResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgDeletePurchaseResponse>
+  ): MsgDeletePurchaseResponse {
+    const message = {
+      ...baseMsgDeletePurchaseResponse,
+    } as MsgDeletePurchaseResponse;
+    return message;
+  },
+};
 
 const baseMsgCreateListing: object = {
   creator: "",
@@ -991,6 +1445,15 @@ export const MsgDeleteAccountResponse = {
 /** Msg defines the Msg service. */
 export interface Msg {
   /** this line is used by starport scaffolding # proto/tx/rpc */
+  CreatePurchase(
+    request: MsgCreatePurchase
+  ): Promise<MsgCreatePurchaseResponse>;
+  UpdatePurchase(
+    request: MsgUpdatePurchase
+  ): Promise<MsgUpdatePurchaseResponse>;
+  DeletePurchase(
+    request: MsgDeletePurchase
+  ): Promise<MsgDeletePurchaseResponse>;
   CreateListing(request: MsgCreateListing): Promise<MsgCreateListingResponse>;
   UpdateListing(request: MsgUpdateListing): Promise<MsgUpdateListingResponse>;
   DeleteListing(request: MsgDeleteListing): Promise<MsgDeleteListingResponse>;
@@ -1004,6 +1467,48 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
   }
+  CreatePurchase(
+    request: MsgCreatePurchase
+  ): Promise<MsgCreatePurchaseResponse> {
+    const data = MsgCreatePurchase.encode(request).finish();
+    const promise = this.rpc.request(
+      "FloppyDisck.Mercury.Mercury.Msg",
+      "CreatePurchase",
+      data
+    );
+    return promise.then((data) =>
+      MsgCreatePurchaseResponse.decode(new Reader(data))
+    );
+  }
+
+  UpdatePurchase(
+    request: MsgUpdatePurchase
+  ): Promise<MsgUpdatePurchaseResponse> {
+    const data = MsgUpdatePurchase.encode(request).finish();
+    const promise = this.rpc.request(
+      "FloppyDisck.Mercury.Mercury.Msg",
+      "UpdatePurchase",
+      data
+    );
+    return promise.then((data) =>
+      MsgUpdatePurchaseResponse.decode(new Reader(data))
+    );
+  }
+
+  DeletePurchase(
+    request: MsgDeletePurchase
+  ): Promise<MsgDeletePurchaseResponse> {
+    const data = MsgDeletePurchase.encode(request).finish();
+    const promise = this.rpc.request(
+      "FloppyDisck.Mercury.Mercury.Msg",
+      "DeletePurchase",
+      data
+    );
+    return promise.then((data) =>
+      MsgDeletePurchaseResponse.decode(new Reader(data))
+    );
+  }
+
   CreateListing(request: MsgCreateListing): Promise<MsgCreateListingResponse> {
     const data = MsgCreateListing.encode(request).finish();
     const promise = this.rpc.request(

@@ -10,29 +10,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// GetQueryListing returns the cli query commands for this module
-func GetQueryListing(queryRoute string) *cobra.Command {
+// GetQueryPurchase returns the cli query commands for this module
+func GetQueryPurchase(queryRoute string) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                        "listing",
-		Short:                      "Querying listing",
+		Use:                        "purchase",
+		Short:                      "Purchase listing",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdListListing())
-	cmd.AddCommand(CmdShowListing())
-	cmd.AddCommand(CmdShowListingWithName())
-	cmd.AddCommand(CmdShowListingWithSeller())
-	cmd.AddCommand(CmdShowListingWithReview())
+	cmd.AddCommand(CmdListPurchase())
+	cmd.AddCommand(CmdShowPurchase())
+	cmd.AddCommand(CmdShowPurchaseWithListing())
+	cmd.AddCommand(CmdShowPurchaseWithBuyer())
 
 	return cmd
 }
 
-func CmdListListing() *cobra.Command {
+func CmdListPurchase() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
-		Short: "list all listing",
+		Short: "list all purchases",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -43,11 +42,11 @@ func CmdListListing() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllListingRequest{
+			params := &types.QueryAllPurchaseRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ListingAll(context.Background(), params)
+			res, err := queryClient.PurchaseAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -61,10 +60,10 @@ func CmdListListing() *cobra.Command {
 	return cmd
 }
 
-func CmdShowListing() *cobra.Command {
+func CmdShowPurchase() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show [id]",
-		Short: "shows a listing",
+		Short: "shows a purchase",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -76,11 +75,11 @@ func CmdShowListing() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryGetListingRequest{
+			params := &types.QueryGetPurchaseRequest{
 				Id: id,
 			}
 
-			res, err := queryClient.Listing(context.Background(), params)
+			res, err := queryClient.Purchase(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -94,11 +93,10 @@ func CmdShowListing() *cobra.Command {
 	return cmd
 }
 
-func CmdShowListingWithName() *cobra.Command {
+func CmdShowPurchaseWithListing() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "name [name]",
-		Short: "shows all listings with that name ",
-		Args:  cobra.ExactArgs(1),
+		Use:   "listing [listing]",
+		Short: "list all purchases under that listing",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -109,12 +107,14 @@ func CmdShowListingWithName() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllListingWithNameRequest{
-				Name:       args[0],
+			listing, _ := strconv.ParseUint(args[0], 2, 64)
+
+			params := &types.QueryAllPurchaseWithListingRequest{
+				Listing:    listing,
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ListingWithName(context.Background(), params)
+			res, err := queryClient.PurchaseWithListing(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -128,11 +128,10 @@ func CmdShowListingWithName() *cobra.Command {
 	return cmd
 }
 
-func CmdShowListingWithSeller() *cobra.Command {
+func CmdShowPurchaseWithBuyer() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "seller [seller]",
-		Short: "shows all listings with that seller ",
-		Args:  cobra.ExactArgs(1),
+		Use:   "buyer [buyer]",
+		Short: "list all purchases under that buyer",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -143,48 +142,12 @@ func CmdShowListingWithSeller() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllListingWithSellerRequest{
-				Seller:     args[0],
+			params := &types.QueryAllPurchaseWithBuyerRequest{
+				Buyer:      string(args[0]),
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ListingWithSeller(context.Background(), params)
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintProto(res)
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-
-	return cmd
-}
-
-func CmdShowListingWithReview() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "review [review]",
-		Short: "shows all listings with that review ",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-
-			pageReq, err := client.ReadPageRequest(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			rev, _ := strconv.ParseUint(args[0], 2, 32)
-
-			params := &types.QueryAllListingWithReviewRequest{
-				Review:     uint32(rev),
-				Pagination: pageReq,
-			}
-
-			res, err := queryClient.ListingWithReview(context.Background(), params)
+			res, err := queryClient.PurchaseWithBuyer(context.Background(), params)
 			if err != nil {
 				return err
 			}

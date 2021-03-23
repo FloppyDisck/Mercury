@@ -9,3 +9,8 @@ const (
 	QueryGetListing  = "get-listing"
 	QueryListListing = "list-listing"
 )
+
+const (
+	QueryGetPurchase  = "get-purchase"
+	QueryListPurchase = "list-purchase"
+)

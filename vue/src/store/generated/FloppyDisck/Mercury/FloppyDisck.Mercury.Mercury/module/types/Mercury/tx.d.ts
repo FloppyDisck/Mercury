@@ -1,6 +1,27 @@
 import { Reader, Writer } from "protobufjs/minimal";
 export declare const protobufPackage = "FloppyDisck.Mercury.Mercury";
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgCreatePurchase {
+    creator: string;
+    listing: number;
+    description: string;
+}
+export interface MsgCreatePurchaseResponse {
+    id: number;
+}
+export interface MsgUpdatePurchase {
+    creator: string;
+    id: number;
+    description: string;
+}
+export interface MsgUpdatePurchaseResponse {
+}
+export interface MsgDeletePurchase {
+    creator: string;
+    id: number;
+}
+export interface MsgDeletePurchaseResponse {
+}
 export interface MsgCreateListing {
     creator: string;
     amount: number;
@@ -47,6 +68,48 @@ export interface MsgDeleteAccount {
 }
 export interface MsgDeleteAccountResponse {
 }
+export declare const MsgCreatePurchase: {
+    encode(message: MsgCreatePurchase, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreatePurchase;
+    fromJSON(object: any): MsgCreatePurchase;
+    toJSON(message: MsgCreatePurchase): unknown;
+    fromPartial(object: DeepPartial<MsgCreatePurchase>): MsgCreatePurchase;
+};
+export declare const MsgCreatePurchaseResponse: {
+    encode(message: MsgCreatePurchaseResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreatePurchaseResponse;
+    fromJSON(object: any): MsgCreatePurchaseResponse;
+    toJSON(message: MsgCreatePurchaseResponse): unknown;
+    fromPartial(object: DeepPartial<MsgCreatePurchaseResponse>): MsgCreatePurchaseResponse;
+};
+export declare const MsgUpdatePurchase: {
+    encode(message: MsgUpdatePurchase, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdatePurchase;
+    fromJSON(object: any): MsgUpdatePurchase;
+    toJSON(message: MsgUpdatePurchase): unknown;
+    fromPartial(object: DeepPartial<MsgUpdatePurchase>): MsgUpdatePurchase;
+};
+export declare const MsgUpdatePurchaseResponse: {
+    encode(_: MsgUpdatePurchaseResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdatePurchaseResponse;
+    fromJSON(_: any): MsgUpdatePurchaseResponse;
+    toJSON(_: MsgUpdatePurchaseResponse): unknown;
+    fromPartial(_: DeepPartial<MsgUpdatePurchaseResponse>): MsgUpdatePurchaseResponse;
+};
+export declare const MsgDeletePurchase: {
+    encode(message: MsgDeletePurchase, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeletePurchase;
+    fromJSON(object: any): MsgDeletePurchase;
+    toJSON(message: MsgDeletePurchase): unknown;
+    fromPartial(object: DeepPartial<MsgDeletePurchase>): MsgDeletePurchase;
+};
+export declare const MsgDeletePurchaseResponse: {
+    encode(_: MsgDeletePurchaseResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeletePurchaseResponse;
+    fromJSON(_: any): MsgDeletePurchaseResponse;
+    toJSON(_: MsgDeletePurchaseResponse): unknown;
+    fromPartial(_: DeepPartial<MsgDeletePurchaseResponse>): MsgDeletePurchaseResponse;
+};
 export declare const MsgCreateListing: {
     encode(message: MsgCreateListing, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreateListing;
@@ -134,6 +197,9 @@ export declare const MsgDeleteAccountResponse: {
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
+    CreatePurchase(request: MsgCreatePurchase): Promise<MsgCreatePurchaseResponse>;
+    UpdatePurchase(request: MsgUpdatePurchase): Promise<MsgUpdatePurchaseResponse>;
+    DeletePurchase(request: MsgDeletePurchase): Promise<MsgDeletePurchaseResponse>;
     CreateListing(request: MsgCreateListing): Promise<MsgCreateListingResponse>;
     UpdateListing(request: MsgUpdateListing): Promise<MsgUpdateListingResponse>;
     DeleteListing(request: MsgDeleteListing): Promise<MsgDeleteListingResponse>;
@@ -144,6 +210,9 @@ export interface Msg {
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
+    CreatePurchase(request: MsgCreatePurchase): Promise<MsgCreatePurchaseResponse>;
+    UpdatePurchase(request: MsgUpdatePurchase): Promise<MsgUpdatePurchaseResponse>;
+    DeletePurchase(request: MsgDeletePurchase): Promise<MsgDeletePurchaseResponse>;
     CreateListing(request: MsgCreateListing): Promise<MsgCreateListingResponse>;
     UpdateListing(request: MsgUpdateListing): Promise<MsgUpdateListingResponse>;
     DeleteListing(request: MsgDeleteListing): Promise<MsgDeleteListingResponse>;

@@ -4,6 +4,7 @@ package FloppyDisck.Mercury.Mercury;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "Mercury/purchase.proto";
 import "Mercury/listing.proto";
 import "Mercury/account.proto";
 
@@ -12,6 +13,19 @@ option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+	rpc Purchase(QueryGetPurchaseRequest) returns (QueryGetPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase/{id}";
+	}
+	rpc PurchaseAll(QueryAllPurchaseRequest) returns (QueryAllPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase";
+	}
+	rpc PurchaseWithListing(QueryAllPurchaseWithListingRequest) returns (QueryAllPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase/listing/{listing}";
+	}
+	rpc PurchaseWithBuyer(QueryAllPurchaseWithBuyerRequest) returns (QueryAllPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase/buyer/{buyer}";
+	}
+
 	rpc Listing(QueryGetListingRequest) returns (QueryGetListingResponse) {
 		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/{id}";
 	}
@@ -47,6 +61,32 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetPurchaseRequest {
+	uint64 id = 1;
+}
+
+message QueryGetPurchaseResponse {
+	Purchase Purchase = 1;
+}
+
+message QueryAllPurchaseRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPurchaseWithListingRequest {
+	uint64 listing = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllPurchaseWithBuyerRequest {
+	string buyer = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllPurchaseResponse {
+	repeated Purchase Purchase = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
 message QueryGetListingRequest {
 	uint64 id = 1;
 }

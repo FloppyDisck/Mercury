@@ -8,6 +8,9 @@ option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreatePurchase(MsgCreatePurchase) returns (MsgCreatePurchaseResponse);
+  rpc UpdatePurchase(MsgUpdatePurchase) returns (MsgUpdatePurchaseResponse);
+  rpc DeletePurchase(MsgDeletePurchase) returns (MsgDeletePurchaseResponse);
   rpc CreateListing(MsgCreateListing) returns (MsgCreateListingResponse);
   rpc UpdateListing(MsgUpdateListing) returns (MsgUpdateListingResponse);
   rpc DeleteListing(MsgDeleteListing) returns (MsgDeleteListingResponse);
@@ -17,6 +20,31 @@ service Msg {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgCreatePurchase {
+  string creator = 1;
+  uint64 listing = 2;
+  string description = 3;
+}
+
+message MsgCreatePurchaseResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdatePurchase {
+  string creator = 1;
+  uint64 id = 2;
+  string description = 5;
+}
+
+message MsgUpdatePurchaseResponse { }
+
+message MsgDeletePurchase {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeletePurchaseResponse { }
+
 message MsgCreateListing {
   string creator = 1;
   uint64 amount = 2;

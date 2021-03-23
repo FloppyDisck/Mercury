@@ -73,7 +73,6 @@ func (k Keeper) AppendListing(
 	value := k.cdc.MustMarshalBinaryBare(&listing)
 	store.Set(GetListingIDBytes(listing.Id), value)
 
-	//TODO: replace spaces with plus signs
 	countStr := strconv.FormatUint(count, 10)
 	reviewStr := strconv.Itoa(int(review.Average))
 	// Extra account key stores
