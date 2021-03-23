@@ -20,3 +20,22 @@ const (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
+
+// GetStringBytes Turns strings to Bytes
+func GetStringBytes(str string) []byte {
+	bz := KeyPrefix(str)
+	return bz
+}
+
+// GetBytesString Turns bytes into a string
+func GetBytesString(bz []byte) string {
+	return string(bz)
+}
+
+const (
+	AccountKey       = "Account-value-"
+	AccountNameKey   = "Account-name-"
+	AccountReviewKey = "Account-review-"
+	AccountWalletKey = "Account-wallet-"
+	AccountCountKey  = "Account-count-"
+)
