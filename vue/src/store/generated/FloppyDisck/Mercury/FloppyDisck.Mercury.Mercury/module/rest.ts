@@ -18,14 +18,40 @@ export interface MercuryAccount {
   review?: MercuryReview;
 }
 
+export interface MercuryListing {
+  creator?: string;
+
+  /** @format uint64 */
+  id?: string;
+  price?: MercuryPrice;
+  name?: string;
+  description?: string;
+  review?: MercuryReview;
+}
+
 export interface MercuryMsgCreateAccountResponse {
+  /** @format uint64 */
+  id?: string;
+}
+
+export interface MercuryMsgCreateListingResponse {
   /** @format uint64 */
   id?: string;
 }
 
 export type MercuryMsgDeleteAccountResponse = object;
 
+export type MercuryMsgDeleteListingResponse = object;
+
 export type MercuryMsgUpdateAccountResponse = object;
+
+export type MercuryMsgUpdateListingResponse = object;
+
+export interface MercuryPrice {
+  /** @format uint64 */
+  amount?: string;
+  currency?: string;
+}
 
 export interface MercuryQueryAllAccountResponse {
   Account?: MercuryAccount[];
@@ -42,8 +68,27 @@ export interface MercuryQueryAllAccountResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface MercuryQueryAllListingResponse {
+  Listing?: MercuryListing[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface MercuryQueryGetAccountResponse {
   Account?: MercuryAccount;
+}
+
+export interface MercuryQueryGetListingResponse {
+  Listing?: MercuryListing;
 }
 
 export interface MercuryReview {
@@ -417,12 +462,126 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    *
    * @tags Query
    * @name QueryAccount
-   * @summary this line is used by starport scaffolding # 2
    * @request GET:/FloppyDisck/Mercury/Mercury/account/{id}
    */
   queryAccount = (id: string, params: RequestParams = {}) =>
     this.request<MercuryQueryGetAccountResponse, RpcStatus>({
       path: `/FloppyDisck/Mercury/Mercury/account/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryListingAll
+   * @request GET:/FloppyDisck/Mercury/Mercury/listing
+   */
+  queryListingAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllListingResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/listing`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryListingWithName
+   * @request GET:/FloppyDisck/Mercury/Mercury/listing/name/{name}
+   */
+  queryListingWithName = (
+    name: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllListingResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/listing/name/${name}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryListingWithReview
+   * @request GET:/FloppyDisck/Mercury/Mercury/listing/review/{review}
+   */
+  queryListingWithReview = (
+    review: number,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllListingResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/listing/review/${review}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryListingWithSeller
+   * @request GET:/FloppyDisck/Mercury/Mercury/listing/seller/{seller}
+   */
+  queryListingWithSeller = (
+    seller: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllListingResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/listing/seller/${seller}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryListing
+   * @summary this line is used by starport scaffolding # 2
+   * @request GET:/FloppyDisck/Mercury/Mercury/listing/{id}
+   */
+  queryListing = (id: string, params: RequestParams = {}) =>
+    this.request<MercuryQueryGetListingResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/listing/${id}`,
       method: "GET",
       format: "json",
       ...params,

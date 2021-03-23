@@ -2,9 +2,10 @@ import { txClient, queryClient } from './module'
 // @ts-ignore
 import { SpVuexError } from '@starport/vuex'
 
-import { Account } from "./module/types/Mercury/account"
 import { Price } from "./module/types/Mercury/util"
 import { Review } from "./module/types/Mercury/util"
+import { Listing } from "./module/types/Mercury/listing"
+import { Account } from "./module/types/Mercury/account"
 
 
 async function initTxClient(vuexGetters) {
@@ -32,6 +33,11 @@ function getStructure(template) {
 
 const getDefaultState = () => {
 	return {
+        Listing: {},
+        ListingAll: {},
+        ListingWithSeller: {},
+        ListingWithReview: {},
+        ListingWithName: {},
         Account: {},
         AccountWallet: {},
         AccountAll: {},
@@ -39,9 +45,10 @@ const getDefaultState = () => {
         AccountWithReview: {},
         
         _Structure: {
-            Account: getStructure(Account.fromPartial({})),
             Price: getStructure(Price.fromPartial({})),
             Review: getStructure(Review.fromPartial({})),
+            Listing: getStructure(Listing.fromPartial({})),
+            Account: getStructure(Account.fromPartial({})),
             
 		},
 		_Subscriptions: new Set(),
@@ -69,6 +76,36 @@ export default {
 		}
 	},
 	getters: {
+        getListing: (state) => (params = {}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Listing[JSON.stringify(params)] ?? {}
+		},
+        getListingAll: (state) => (params = {}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ListingAll[JSON.stringify(params)] ?? {}
+		},
+        getListingWithSeller: (state) => (params = {}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ListingWithSeller[JSON.stringify(params)] ?? {}
+		},
+        getListingWithReview: (state) => (params = {}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ListingWithReview[JSON.stringify(params)] ?? {}
+		},
+        getListingWithName: (state) => (params = {}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ListingWithName[JSON.stringify(params)] ?? {}
+		},
         getAccount: (state) => (params = {}) => {
 					if (!(<any> params).query) {
 						(<any> params).query=null
@@ -123,6 +160,115 @@ export default {
 			state._Subscriptions.forEach((subscription) => {
 				dispatch(subscription.action, subscription.payload)
 			})
+		},
+		async QueryListing({ commit, rootGetters, getters }, { options: { subscribe = false , all = false}, params: {...key}, query=null }) {
+			try {
+				
+				let value = query?(await (await initQueryClient(rootGetters)).queryListing( key.id,  query)).data:(await (await initQueryClient(rootGetters)).queryListing( key.id )).data
+				
+				commit('QUERY', { query: 'Listing', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryListing', payload: { options: { all }, params: {...key},query }})
+				return getters['getListing']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				console.error(new SpVuexError('QueryClient:QueryListing', 'API Node Unavailable. Could not perform query.'))
+				return {}
+			}
+		},
+		async QueryListingAll({ commit, rootGetters, getters }, { options: { subscribe = false , all = false}, params: {...key}, query=null }) {
+			try {
+				
+				let value = query?(await (await initQueryClient(rootGetters)).queryListingAll( query)).data:(await (await initQueryClient(rootGetters)).queryListingAll()).data
+				
+				while (all && (<any> value).pagination && (<any> value).pagination.nextKey!=null) {
+					let next_values=(await (await initQueryClient(rootGetters)).queryListingAll({...query, 'pagination.key':(<any> value).pagination.nextKey})).data
+					for (let prop of Object.keys(next_values)) {
+						if (Array.isArray(next_values[prop])) {
+							value[prop]=[...value[prop], ...next_values[prop]]
+						}else{
+							value[prop]=next_values[prop]
+						}
+					}
+				}
+				
+				commit('QUERY', { query: 'ListingAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryListingAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getListingAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				console.error(new SpVuexError('QueryClient:QueryListingAll', 'API Node Unavailable. Could not perform query.'))
+				return {}
+			}
+		},
+		async QueryListingWithSeller({ commit, rootGetters, getters }, { options: { subscribe = false , all = false}, params: {...key}, query=null }) {
+			try {
+				
+				let value = query?(await (await initQueryClient(rootGetters)).queryListingWithSeller( key.seller,  query)).data:(await (await initQueryClient(rootGetters)).queryListingWithSeller( key.seller )).data
+				
+				while (all && (<any> value).pagination && (<any> value).pagination.nextKey!=null) {
+					let next_values=(await (await initQueryClient(rootGetters)).queryListingWithSeller( key.seller, {...query, 'pagination.key':(<any> value).pagination.nextKey})).data
+					for (let prop of Object.keys(next_values)) {
+						if (Array.isArray(next_values[prop])) {
+							value[prop]=[...value[prop], ...next_values[prop]]
+						}else{
+							value[prop]=next_values[prop]
+						}
+					}
+				}
+				
+				commit('QUERY', { query: 'ListingWithSeller', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryListingWithSeller', payload: { options: { all }, params: {...key},query }})
+				return getters['getListingWithSeller']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				console.error(new SpVuexError('QueryClient:QueryListingWithSeller', 'API Node Unavailable. Could not perform query.'))
+				return {}
+			}
+		},
+		async QueryListingWithReview({ commit, rootGetters, getters }, { options: { subscribe = false , all = false}, params: {...key}, query=null }) {
+			try {
+				
+				let value = query?(await (await initQueryClient(rootGetters)).queryListingWithReview( key.review,  query)).data:(await (await initQueryClient(rootGetters)).queryListingWithReview( key.review )).data
+				
+				while (all && (<any> value).pagination && (<any> value).pagination.nextKey!=null) {
+					let next_values=(await (await initQueryClient(rootGetters)).queryListingWithReview( key.review, {...query, 'pagination.key':(<any> value).pagination.nextKey})).data
+					for (let prop of Object.keys(next_values)) {
+						if (Array.isArray(next_values[prop])) {
+							value[prop]=[...value[prop], ...next_values[prop]]
+						}else{
+							value[prop]=next_values[prop]
+						}
+					}
+				}
+				
+				commit('QUERY', { query: 'ListingWithReview', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryListingWithReview', payload: { options: { all }, params: {...key},query }})
+				return getters['getListingWithReview']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				console.error(new SpVuexError('QueryClient:QueryListingWithReview', 'API Node Unavailable. Could not perform query.'))
+				return {}
+			}
+		},
+		async QueryListingWithName({ commit, rootGetters, getters }, { options: { subscribe = false , all = false}, params: {...key}, query=null }) {
+			try {
+				
+				let value = query?(await (await initQueryClient(rootGetters)).queryListingWithName( key.name,  query)).data:(await (await initQueryClient(rootGetters)).queryListingWithName( key.name )).data
+				
+				while (all && (<any> value).pagination && (<any> value).pagination.nextKey!=null) {
+					let next_values=(await (await initQueryClient(rootGetters)).queryListingWithName( key.name, {...query, 'pagination.key':(<any> value).pagination.nextKey})).data
+					for (let prop of Object.keys(next_values)) {
+						if (Array.isArray(next_values[prop])) {
+							value[prop]=[...value[prop], ...next_values[prop]]
+						}else{
+							value[prop]=next_values[prop]
+						}
+					}
+				}
+				
+				commit('QUERY', { query: 'ListingWithName', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryListingWithName', payload: { options: { all }, params: {...key},query }})
+				return getters['getListingWithName']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				console.error(new SpVuexError('QueryClient:QueryListingWithName', 'API Node Unavailable. Could not perform query.'))
+				return {}
+			}
 		},
 		async QueryAccount({ commit, rootGetters, getters }, { options: { subscribe = false , all = false}, params: {...key}, query=null }) {
 			try {
@@ -237,6 +383,20 @@ export default {
 				}
 			}
 		},
+		async sendMsgUpdateListing({ rootGetters }, { value, fee, memo }) {
+			try {
+				const msg = await (await initTxClient(rootGetters)).msgUpdateListing(value)
+				const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], {fee: { amount: fee, 
+  gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e.toString()=='wallet is required') {
+					throw new SpVuexError('TxClient:MsgUpdateListing:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgUpdateListing:Send', 'Could not broadcast Tx.')
+				}
+			}
+		},
 		async sendMsgUpdateAccount({ rootGetters }, { value, fee, memo }) {
 			try {
 				const msg = await (await initTxClient(rootGetters)).msgUpdateAccount(value)
@@ -248,6 +408,34 @@ export default {
 					throw new SpVuexError('TxClient:MsgUpdateAccount:Init', 'Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new SpVuexError('TxClient:MsgUpdateAccount:Send', 'Could not broadcast Tx.')
+				}
+			}
+		},
+		async sendMsgCreateListing({ rootGetters }, { value, fee, memo }) {
+			try {
+				const msg = await (await initTxClient(rootGetters)).msgCreateListing(value)
+				const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], {fee: { amount: fee, 
+  gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e.toString()=='wallet is required') {
+					throw new SpVuexError('TxClient:MsgCreateListing:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgCreateListing:Send', 'Could not broadcast Tx.')
+				}
+			}
+		},
+		async sendMsgDeleteListing({ rootGetters }, { value, fee, memo }) {
+			try {
+				const msg = await (await initTxClient(rootGetters)).msgDeleteListing(value)
+				const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], {fee: { amount: fee, 
+  gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e.toString()=='wallet is required') {
+					throw new SpVuexError('TxClient:MsgDeleteListing:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgDeleteListing:Send', 'Could not broadcast Tx.')
 				}
 			}
 		},
@@ -278,6 +466,18 @@ export default {
 				}
 			}
 		},
+		async MsgUpdateListing({ rootGetters }, { value }) {
+			try {
+				const msg = await (await initTxClient(rootGetters)).msgUpdateListing(value)
+				return msg
+			} catch (e) {
+				if (e.toString()=='wallet is required') {
+					throw new SpVuexError('TxClient:MsgUpdateListing:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgUpdateListing:Create', 'Could not create message.')
+				}
+			}
+		},
 		async MsgUpdateAccount({ rootGetters }, { value }) {
 			try {
 				const msg = await (await initTxClient(rootGetters)).msgUpdateAccount(value)
@@ -287,6 +487,30 @@ export default {
 					throw new SpVuexError('TxClient:MsgUpdateAccount:Init', 'Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new SpVuexError('TxClient:MsgUpdateAccount:Create', 'Could not create message.')
+				}
+			}
+		},
+		async MsgCreateListing({ rootGetters }, { value }) {
+			try {
+				const msg = await (await initTxClient(rootGetters)).msgCreateListing(value)
+				return msg
+			} catch (e) {
+				if (e.toString()=='wallet is required') {
+					throw new SpVuexError('TxClient:MsgCreateListing:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgCreateListing:Create', 'Could not create message.')
+				}
+			}
+		},
+		async MsgDeleteListing({ rootGetters }, { value }) {
+			try {
+				const msg = await (await initTxClient(rootGetters)).msgDeleteListing(value)
+				return msg
+			} catch (e) {
+				if (e.toString()=='wallet is required') {
+					throw new SpVuexError('TxClient:MsgDeleteListing:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgDeleteListing:Create', 'Could not create message.')
 				}
 			}
 		},

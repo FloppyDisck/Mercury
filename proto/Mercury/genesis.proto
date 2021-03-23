@@ -2,6 +2,7 @@ syntax = "proto3";
 package FloppyDisck.Mercury.Mercury;
 
 // this line is used by starport scaffolding # genesis/proto/import
+import "Mercury/listing.proto";
 import "Mercury/account.proto";
 
 option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
@@ -9,6 +10,7 @@ option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
 // GenesisState defines the capability module's genesis state.
 message GenesisState {
     // this line is used by starport scaffolding # genesis/proto/state
+		repeated Listing listingList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
 		repeated Account accountList = 1; // this line is used by starport scaffolding # genesis/proto/stateField
 }
 

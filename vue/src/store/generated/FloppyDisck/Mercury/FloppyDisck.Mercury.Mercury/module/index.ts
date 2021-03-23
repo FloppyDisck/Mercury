@@ -5,13 +5,19 @@ import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
 import { MsgDeleteAccount } from "./types/Mercury/tx";
+import { MsgUpdateListing } from "./types/Mercury/tx";
 import { MsgUpdateAccount } from "./types/Mercury/tx";
+import { MsgCreateListing } from "./types/Mercury/tx";
+import { MsgDeleteListing } from "./types/Mercury/tx";
 import { MsgCreateAccount } from "./types/Mercury/tx";
 
 
 const types = [
   ["/FloppyDisck.Mercury.Mercury.MsgDeleteAccount", MsgDeleteAccount],
+  ["/FloppyDisck.Mercury.Mercury.MsgUpdateListing", MsgUpdateListing],
   ["/FloppyDisck.Mercury.Mercury.MsgUpdateAccount", MsgUpdateAccount],
+  ["/FloppyDisck.Mercury.Mercury.MsgCreateListing", MsgCreateListing],
+  ["/FloppyDisck.Mercury.Mercury.MsgDeleteListing", MsgDeleteListing],
   ["/FloppyDisck.Mercury.Mercury.MsgCreateAccount", MsgCreateAccount],
   
 ];
@@ -41,7 +47,10 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee=defaultFee, memo=null }: SignAndBroadcastOptions) => memo?client.signAndBroadcast(address, msgs, fee,memo):client.signAndBroadcast(address, msgs, fee),
     msgDeleteAccount: (data: MsgDeleteAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeleteAccount", value: data }),
+    msgUpdateListing: (data: MsgUpdateListing): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdateListing", value: data }),
     msgUpdateAccount: (data: MsgUpdateAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdateAccount", value: data }),
+    msgCreateListing: (data: MsgCreateListing): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreateListing", value: data }),
+    msgDeleteListing: (data: MsgDeleteListing): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeleteListing", value: data }),
     msgCreateAccount: (data: MsgCreateAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreateAccount", value: data }),
     
   };

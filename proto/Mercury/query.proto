@@ -4,6 +4,7 @@ package FloppyDisck.Mercury.Mercury;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "Mercury/listing.proto";
 import "Mercury/account.proto";
 
 option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
@@ -11,6 +12,22 @@ option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+	rpc Listing(QueryGetListingRequest) returns (QueryGetListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/{id}";
+	}
+	rpc ListingAll(QueryAllListingRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing";
+	}
+	rpc ListingWithSeller(QueryAllListingWithSellerRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/seller/{seller}";
+	}
+	rpc ListingWithReview(QueryAllListingWithReviewRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/review/{review}";
+	}
+	rpc ListingWithName(QueryAllListingWithNameRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/name/{name}";
+	}
+
 	rpc Account(QueryGetAccountRequest) returns (QueryGetAccountResponse) {
 		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/account/{id}";
 	}
@@ -30,6 +47,40 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetListingRequest {
+	uint64 id = 1;
+}
+
+message QueryGetListingResponse {
+	Listing Listing = 1;
+}
+
+message QueryAllListingRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllListingWithSellerRequest {
+	string seller = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllListingWithReviewRequest {
+	uint32 review = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllListingWithNameRequest {
+	string name = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllListingResponse {
+	repeated Listing Listing = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+
 message QueryGetAccountRequest {
 	uint64 id = 1;
 }

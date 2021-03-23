@@ -196,11 +196,80 @@ export class Api extends HttpClient {
          *
          * @tags Query
          * @name QueryAccount
-         * @summary this line is used by starport scaffolding # 2
          * @request GET:/FloppyDisck/Mercury/Mercury/account/{id}
          */
         this.queryAccount = (id, params = {}) => this.request({
             path: `/FloppyDisck/Mercury/Mercury/account/${id}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryListingAll
+         * @request GET:/FloppyDisck/Mercury/Mercury/listing
+         */
+        this.queryListingAll = (query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/listing`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryListingWithName
+         * @request GET:/FloppyDisck/Mercury/Mercury/listing/name/{name}
+         */
+        this.queryListingWithName = (name, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/listing/name/${name}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryListingWithReview
+         * @request GET:/FloppyDisck/Mercury/Mercury/listing/review/{review}
+         */
+        this.queryListingWithReview = (review, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/listing/review/${review}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryListingWithSeller
+         * @request GET:/FloppyDisck/Mercury/Mercury/listing/seller/{seller}
+         */
+        this.queryListingWithSeller = (seller, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/listing/seller/${seller}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryListing
+         * @summary this line is used by starport scaffolding # 2
+         * @request GET:/FloppyDisck/Mercury/Mercury/listing/{id}
+         */
+        this.queryListing = (id, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/listing/${id}`,
             method: "GET",
             format: "json",
             ...params,

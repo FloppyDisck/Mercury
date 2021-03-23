@@ -39,3 +39,11 @@ const (
 	AccountWalletKey = "Account-wallet-"
 	AccountCountKey  = "Account-count-"
 )
+
+const (
+	ListingKey       = "Listing-value-"
+	ListingSellerKey = "Listing-seller-"
+	ListingReviewKey = "Listing-review-"
+	ListingNameKey   = "Listing-name-"
+	ListingCountKey  = "Listing-count-"
+)
