@@ -1,11 +1,504 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from "protobufjs/minimal";
 import * as Long from "long";
-import { Purchase } from "../Mercury/purchase";
+import { Review } from "../Mercury/review";
 import { PageRequest, PageResponse, } from "../cosmos/base/query/v1beta1/pagination";
+import { Purchase } from "../Mercury/purchase";
 import { Listing } from "../Mercury/listing";
 import { Account } from "../Mercury/account";
 export const protobufPackage = "FloppyDisck.Mercury.Mercury";
+const baseQueryGetReviewRequest = { id: 0 };
+export const QueryGetReviewRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.id !== 0) {
+            writer.uint32(8).uint64(message.id);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetReviewRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.id = longToNumber(reader.uint64());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetReviewRequest };
+        if (object.id !== undefined && object.id !== null) {
+            message.id = Number(object.id);
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.id !== undefined && (obj.id = message.id);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetReviewRequest };
+        if (object.id !== undefined && object.id !== null) {
+            message.id = object.id;
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+};
+const baseQueryGetReviewResponse = {};
+export const QueryGetReviewResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.Review !== undefined) {
+            Review.encode(message.Review, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetReviewResponse };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.Review = Review.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetReviewResponse };
+        if (object.Review !== undefined && object.Review !== null) {
+            message.Review = Review.fromJSON(object.Review);
+        }
+        else {
+            message.Review = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.Review !== undefined &&
+            (obj.Review = message.Review ? Review.toJSON(message.Review) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetReviewResponse };
+        if (object.Review !== undefined && object.Review !== null) {
+            message.Review = Review.fromPartial(object.Review);
+        }
+        else {
+            message.Review = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllReviewRequest = {};
+export const QueryAllReviewRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllReviewRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllReviewRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageRequest.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllReviewRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllReviewWithScoreRequest = { score: 0 };
+export const QueryAllReviewWithScoreRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.score !== 0) {
+            writer.uint32(8).uint32(message.score);
+        }
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryAllReviewWithScoreRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.score = reader.uint32();
+                    break;
+                case 2:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryAllReviewWithScoreRequest,
+        };
+        if (object.score !== undefined && object.score !== null) {
+            message.score = Number(object.score);
+        }
+        else {
+            message.score = 0;
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.score !== undefined && (obj.score = message.score);
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageRequest.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryAllReviewWithScoreRequest,
+        };
+        if (object.score !== undefined && object.score !== null) {
+            message.score = object.score;
+        }
+        else {
+            message.score = 0;
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllReviewWithReviewerRequest = { creator: "" };
+export const QueryAllReviewWithReviewerRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.creator !== "") {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryAllReviewWithReviewerRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.creator = reader.string();
+                    break;
+                case 2:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryAllReviewWithReviewerRequest,
+        };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageRequest.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryAllReviewWithReviewerRequest,
+        };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllReviewWithReviewedRequest = { type: "", id: 0 };
+export const QueryAllReviewWithReviewedRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.type !== "") {
+            writer.uint32(10).string(message.type);
+        }
+        if (message.id !== 0) {
+            writer.uint32(16).uint64(message.id);
+        }
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(26).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseQueryAllReviewWithReviewedRequest,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.type = reader.string();
+                    break;
+                case 2:
+                    message.id = longToNumber(reader.uint64());
+                    break;
+                case 3:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseQueryAllReviewWithReviewedRequest,
+        };
+        if (object.type !== undefined && object.type !== null) {
+            message.type = String(object.type);
+        }
+        else {
+            message.type = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = Number(object.id);
+        }
+        else {
+            message.id = 0;
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.type !== undefined && (obj.type = message.type);
+        message.id !== undefined && (obj.id = message.id);
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageRequest.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseQueryAllReviewWithReviewedRequest,
+        };
+        if (object.type !== undefined && object.type !== null) {
+            message.type = object.type;
+        }
+        else {
+            message.type = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = object.id;
+        }
+        else {
+            message.id = 0;
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
+const baseQueryAllReviewResponse = {};
+export const QueryAllReviewResponse = {
+    encode(message, writer = Writer.create()) {
+        for (const v of message.Review) {
+            Review.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        if (message.pagination !== undefined) {
+            PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllReviewResponse };
+        message.Review = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.Review.push(Review.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.pagination = PageResponse.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllReviewResponse };
+        message.Review = [];
+        if (object.Review !== undefined && object.Review !== null) {
+            for (const e of object.Review) {
+                message.Review.push(Review.fromJSON(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.Review) {
+            obj.Review = message.Review.map((e) => e ? Review.toJSON(e) : undefined);
+        }
+        else {
+            obj.Review = [];
+        }
+        message.pagination !== undefined &&
+            (obj.pagination = message.pagination
+                ? PageResponse.toJSON(message.pagination)
+                : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllReviewResponse };
+        message.Review = [];
+        if (object.Review !== undefined && object.Review !== null) {
+            for (const e of object.Review) {
+                message.Review.push(Review.fromPartial(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+};
 const baseQueryGetPurchaseRequest = { id: 0 };
 export const QueryGetPurchaseRequest = {
     encode(message, writer = Writer.create()) {
@@ -1381,6 +1874,31 @@ export const QueryAllAccountResponse = {
 export class QueryClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
+    }
+    Review(request) {
+        const data = QueryGetReviewRequest.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Query", "Review", data);
+        return promise.then((data) => QueryGetReviewResponse.decode(new Reader(data)));
+    }
+    ReviewAll(request) {
+        const data = QueryAllReviewRequest.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Query", "ReviewAll", data);
+        return promise.then((data) => QueryAllReviewResponse.decode(new Reader(data)));
+    }
+    ReviewWithScore(request) {
+        const data = QueryAllReviewWithScoreRequest.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Query", "ReviewWithScore", data);
+        return promise.then((data) => QueryAllReviewResponse.decode(new Reader(data)));
+    }
+    ReviewWithReviewer(request) {
+        const data = QueryAllReviewWithReviewerRequest.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Query", "ReviewWithReviewer", data);
+        return promise.then((data) => QueryAllReviewResponse.decode(new Reader(data)));
+    }
+    ReviewWithReviewed(request) {
+        const data = QueryAllReviewWithReviewedRequest.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Query", "ReviewWithReviewed", data);
+        return promise.then((data) => QueryAllReviewResponse.decode(new Reader(data)));
     }
     Purchase(request) {
         const data = QueryGetPurchaseRequest.encode(request).finish();

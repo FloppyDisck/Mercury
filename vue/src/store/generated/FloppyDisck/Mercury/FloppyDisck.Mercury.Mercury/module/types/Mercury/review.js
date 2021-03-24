@@ -1,10 +1,79 @@
 /* eslint-disable */
 import * as Long from "long";
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import { Price, AvgReview } from "../Mercury/util";
 export const protobufPackage = "FloppyDisck.Mercury.Mercury";
-const baseListing = { creator: "", id: 0, name: "", description: "" };
-export const Listing = {
+const baseReviewed = { type: "", id: 0 };
+export const Reviewed = {
+    encode(message, writer = Writer.create()) {
+        if (message.type !== "") {
+            writer.uint32(10).string(message.type);
+        }
+        if (message.id !== 0) {
+            writer.uint32(16).uint64(message.id);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseReviewed };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.type = reader.string();
+                    break;
+                case 2:
+                    message.id = longToNumber(reader.uint64());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseReviewed };
+        if (object.type !== undefined && object.type !== null) {
+            message.type = String(object.type);
+        }
+        else {
+            message.type = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = Number(object.id);
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.type !== undefined && (obj.type = message.type);
+        message.id !== undefined && (obj.id = message.id);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseReviewed };
+        if (object.type !== undefined && object.type !== null) {
+            message.type = object.type;
+        }
+        else {
+            message.type = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = object.id;
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+};
+const baseReview = { creator: "", id: 0, score: 0, description: "" };
+export const Review = {
     encode(message, writer = Writer.create()) {
         if (message.creator !== "") {
             writer.uint32(10).string(message.creator);
@@ -12,24 +81,21 @@ export const Listing = {
         if (message.id !== 0) {
             writer.uint32(16).uint64(message.id);
         }
-        if (message.price !== undefined) {
-            Price.encode(message.price, writer.uint32(26).fork()).ldelim();
+        if (message.reviewed !== undefined) {
+            Reviewed.encode(message.reviewed, writer.uint32(26).fork()).ldelim();
         }
-        if (message.name !== "") {
-            writer.uint32(34).string(message.name);
+        if (message.score !== 0) {
+            writer.uint32(32).uint32(message.score);
         }
         if (message.description !== "") {
             writer.uint32(42).string(message.description);
-        }
-        if (message.review !== undefined) {
-            AvgReview.encode(message.review, writer.uint32(50).fork()).ldelim();
         }
         return writer;
     },
     decode(input, length) {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseListing };
+        const message = { ...baseReview };
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -40,16 +106,13 @@ export const Listing = {
                     message.id = longToNumber(reader.uint64());
                     break;
                 case 3:
-                    message.price = Price.decode(reader, reader.uint32());
+                    message.reviewed = Reviewed.decode(reader, reader.uint32());
                     break;
                 case 4:
-                    message.name = reader.string();
+                    message.score = reader.uint32();
                     break;
                 case 5:
                     message.description = reader.string();
-                    break;
-                case 6:
-                    message.review = AvgReview.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -59,7 +122,7 @@ export const Listing = {
         return message;
     },
     fromJSON(object) {
-        const message = { ...baseListing };
+        const message = { ...baseReview };
         if (object.creator !== undefined && object.creator !== null) {
             message.creator = String(object.creator);
         }
@@ -72,17 +135,17 @@ export const Listing = {
         else {
             message.id = 0;
         }
-        if (object.price !== undefined && object.price !== null) {
-            message.price = Price.fromJSON(object.price);
+        if (object.reviewed !== undefined && object.reviewed !== null) {
+            message.reviewed = Reviewed.fromJSON(object.reviewed);
         }
         else {
-            message.price = undefined;
+            message.reviewed = undefined;
         }
-        if (object.name !== undefined && object.name !== null) {
-            message.name = String(object.name);
+        if (object.score !== undefined && object.score !== null) {
+            message.score = Number(object.score);
         }
         else {
-            message.name = "";
+            message.score = 0;
         }
         if (object.description !== undefined && object.description !== null) {
             message.description = String(object.description);
@@ -90,31 +153,23 @@ export const Listing = {
         else {
             message.description = "";
         }
-        if (object.review !== undefined && object.review !== null) {
-            message.review = AvgReview.fromJSON(object.review);
-        }
-        else {
-            message.review = undefined;
-        }
         return message;
     },
     toJSON(message) {
         const obj = {};
         message.creator !== undefined && (obj.creator = message.creator);
         message.id !== undefined && (obj.id = message.id);
-        message.price !== undefined &&
-            (obj.price = message.price ? Price.toJSON(message.price) : undefined);
-        message.name !== undefined && (obj.name = message.name);
+        message.reviewed !== undefined &&
+            (obj.reviewed = message.reviewed
+                ? Reviewed.toJSON(message.reviewed)
+                : undefined);
+        message.score !== undefined && (obj.score = message.score);
         message.description !== undefined &&
             (obj.description = message.description);
-        message.review !== undefined &&
-            (obj.review = message.review
-                ? AvgReview.toJSON(message.review)
-                : undefined);
         return obj;
     },
     fromPartial(object) {
-        const message = { ...baseListing };
+        const message = { ...baseReview };
         if (object.creator !== undefined && object.creator !== null) {
             message.creator = object.creator;
         }
@@ -127,29 +182,23 @@ export const Listing = {
         else {
             message.id = 0;
         }
-        if (object.price !== undefined && object.price !== null) {
-            message.price = Price.fromPartial(object.price);
+        if (object.reviewed !== undefined && object.reviewed !== null) {
+            message.reviewed = Reviewed.fromPartial(object.reviewed);
         }
         else {
-            message.price = undefined;
+            message.reviewed = undefined;
         }
-        if (object.name !== undefined && object.name !== null) {
-            message.name = object.name;
+        if (object.score !== undefined && object.score !== null) {
+            message.score = object.score;
         }
         else {
-            message.name = "";
+            message.score = 0;
         }
         if (object.description !== undefined && object.description !== null) {
             message.description = object.description;
         }
         else {
             message.description = "";
-        }
-        if (object.review !== undefined && object.review !== null) {
-            message.review = AvgReview.fromPartial(object.review);
-        }
-        else {
-            message.review = undefined;
         }
         return message;
     },

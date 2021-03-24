@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as Long from "long";
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import { Review } from "../Mercury/util";
+import { AvgReview } from "../Mercury/util";
 export const protobufPackage = "FloppyDisck.Mercury.Mercury";
 const baseAccount = { creator: "", id: 0, name: "" };
 export const Account = {
@@ -16,7 +16,7 @@ export const Account = {
             writer.uint32(26).string(message.name);
         }
         if (message.review !== undefined) {
-            Review.encode(message.review, writer.uint32(34).fork()).ldelim();
+            AvgReview.encode(message.review, writer.uint32(34).fork()).ldelim();
         }
         return writer;
     },
@@ -37,7 +37,7 @@ export const Account = {
                     message.name = reader.string();
                     break;
                 case 4:
-                    message.review = Review.decode(reader, reader.uint32());
+                    message.review = AvgReview.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -67,7 +67,7 @@ export const Account = {
             message.name = "";
         }
         if (object.review !== undefined && object.review !== null) {
-            message.review = Review.fromJSON(object.review);
+            message.review = AvgReview.fromJSON(object.review);
         }
         else {
             message.review = undefined;
@@ -80,7 +80,9 @@ export const Account = {
         message.id !== undefined && (obj.id = message.id);
         message.name !== undefined && (obj.name = message.name);
         message.review !== undefined &&
-            (obj.review = message.review ? Review.toJSON(message.review) : undefined);
+            (obj.review = message.review
+                ? AvgReview.toJSON(message.review)
+                : undefined);
         return obj;
     },
     fromPartial(object) {
@@ -104,7 +106,7 @@ export const Account = {
             message.name = "";
         }
         if (object.review !== undefined && object.review !== null) {
-            message.review = Review.fromPartial(object.review);
+            message.review = AvgReview.fromPartial(object.review);
         }
         else {
             message.review = undefined;

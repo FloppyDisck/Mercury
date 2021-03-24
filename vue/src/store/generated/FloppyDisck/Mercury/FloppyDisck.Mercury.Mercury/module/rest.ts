@@ -15,7 +15,18 @@ export interface MercuryAccount {
   /** @format uint64 */
   id?: string;
   name?: string;
-  review?: MercuryReview;
+  review?: MercuryAvgReview;
+}
+
+export interface MercuryAvgReview {
+  /** @format int64 */
+  average?: number;
+
+  /** @format int64 */
+  count?: number;
+
+  /** @format int64 */
+  sum?: number;
 }
 
 export interface MercuryListing {
@@ -26,7 +37,7 @@ export interface MercuryListing {
   price?: MercuryPrice;
   name?: string;
   description?: string;
-  review?: MercuryReview;
+  review?: MercuryAvgReview;
 }
 
 export interface MercuryMsgCreateAccountResponse {
@@ -44,17 +55,26 @@ export interface MercuryMsgCreatePurchaseResponse {
   id?: string;
 }
 
+export interface MercuryMsgCreateReviewResponse {
+  /** @format uint64 */
+  id?: string;
+}
+
 export type MercuryMsgDeleteAccountResponse = object;
 
 export type MercuryMsgDeleteListingResponse = object;
 
 export type MercuryMsgDeletePurchaseResponse = object;
 
+export type MercuryMsgDeleteReviewResponse = object;
+
 export type MercuryMsgUpdateAccountResponse = object;
 
 export type MercuryMsgUpdateListingResponse = object;
 
 export type MercuryMsgUpdatePurchaseResponse = object;
+
+export type MercuryMsgUpdateReviewResponse = object;
 
 export interface MercuryPrice {
   /** @format uint64 */
@@ -119,6 +139,21 @@ export interface MercuryQueryAllPurchaseResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface MercuryQueryAllReviewResponse {
+  Review?: MercuryReview[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface MercuryQueryGetAccountResponse {
   Account?: MercuryAccount;
 }
@@ -131,15 +166,27 @@ export interface MercuryQueryGetPurchaseResponse {
   Purchase?: MercuryPurchase;
 }
 
+export interface MercuryQueryGetReviewResponse {
+  Review?: MercuryReview;
+}
+
 export interface MercuryReview {
-  /** @format int64 */
-  average?: number;
+  creator?: string;
+
+  /** @format uint64 */
+  id?: string;
+  reviewed?: MercuryReviewed;
 
   /** @format int64 */
-  count?: number;
+  score?: number;
+  description?: string;
+}
 
-  /** @format int64 */
-  sum?: number;
+export interface MercuryReviewed {
+  type?: string;
+
+  /** @format uint64 */
+  id?: string;
 }
 
 export interface ProtobufAny {
@@ -705,12 +752,127 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    *
    * @tags Query
    * @name QueryPurchase
-   * @summary this line is used by starport scaffolding # 2
    * @request GET:/FloppyDisck/Mercury/Mercury/purchase/{id}
    */
   queryPurchase = (id: string, params: RequestParams = {}) =>
     this.request<MercuryQueryGetPurchaseResponse, RpcStatus>({
       path: `/FloppyDisck/Mercury/Mercury/purchase/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryReviewAll
+   * @request GET:/FloppyDisck/Mercury/Mercury/review
+   */
+  queryReviewAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllReviewResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/review`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryReviewWithReviewed
+   * @request GET:/FloppyDisck/Mercury/Mercury/review/from/{type}/{id}
+   */
+  queryReviewWithReviewed = (
+    type: string,
+    id: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllReviewResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/review/from/${type}/${id}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryReviewWithReviewer
+   * @request GET:/FloppyDisck/Mercury/Mercury/review/reviewer/{creator}
+   */
+  queryReviewWithReviewer = (
+    creator: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllReviewResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/review/reviewer/${creator}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryReviewWithScore
+   * @request GET:/FloppyDisck/Mercury/Mercury/review/score/{score}
+   */
+  queryReviewWithScore = (
+    score: number,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MercuryQueryAllReviewResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/review/score/${score}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryReview
+   * @summary this line is used by starport scaffolding # 2
+   * @request GET:/FloppyDisck/Mercury/Mercury/review/{id}
+   */
+  queryReview = (id: string, params: RequestParams = {}) =>
+    this.request<MercuryQueryGetReviewResponse, RpcStatus>({
+      path: `/FloppyDisck/Mercury/Mercury/review/${id}`,
       method: "GET",
       format: "json",
       ...params,

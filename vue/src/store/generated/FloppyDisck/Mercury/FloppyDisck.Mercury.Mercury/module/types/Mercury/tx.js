@@ -2,6 +2,457 @@
 import { Reader, util, configure, Writer } from "protobufjs/minimal";
 import * as Long from "long";
 export const protobufPackage = "FloppyDisck.Mercury.Mercury";
+const baseMsgCreateReview = {
+    creator: "",
+    reviewType: "",
+    reviewId: 0,
+    score: 0,
+    description: "",
+};
+export const MsgCreateReview = {
+    encode(message, writer = Writer.create()) {
+        if (message.creator !== "") {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.reviewType !== "") {
+            writer.uint32(18).string(message.reviewType);
+        }
+        if (message.reviewId !== 0) {
+            writer.uint32(24).uint64(message.reviewId);
+        }
+        if (message.score !== 0) {
+            writer.uint32(32).uint32(message.score);
+        }
+        if (message.description !== "") {
+            writer.uint32(42).string(message.description);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseMsgCreateReview };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.creator = reader.string();
+                    break;
+                case 2:
+                    message.reviewType = reader.string();
+                    break;
+                case 3:
+                    message.reviewId = longToNumber(reader.uint64());
+                    break;
+                case 4:
+                    message.score = reader.uint32();
+                    break;
+                case 5:
+                    message.description = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseMsgCreateReview };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.reviewType !== undefined && object.reviewType !== null) {
+            message.reviewType = String(object.reviewType);
+        }
+        else {
+            message.reviewType = "";
+        }
+        if (object.reviewId !== undefined && object.reviewId !== null) {
+            message.reviewId = Number(object.reviewId);
+        }
+        else {
+            message.reviewId = 0;
+        }
+        if (object.score !== undefined && object.score !== null) {
+            message.score = Number(object.score);
+        }
+        else {
+            message.score = 0;
+        }
+        if (object.description !== undefined && object.description !== null) {
+            message.description = String(object.description);
+        }
+        else {
+            message.description = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.reviewType !== undefined && (obj.reviewType = message.reviewType);
+        message.reviewId !== undefined && (obj.reviewId = message.reviewId);
+        message.score !== undefined && (obj.score = message.score);
+        message.description !== undefined &&
+            (obj.description = message.description);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseMsgCreateReview };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.reviewType !== undefined && object.reviewType !== null) {
+            message.reviewType = object.reviewType;
+        }
+        else {
+            message.reviewType = "";
+        }
+        if (object.reviewId !== undefined && object.reviewId !== null) {
+            message.reviewId = object.reviewId;
+        }
+        else {
+            message.reviewId = 0;
+        }
+        if (object.score !== undefined && object.score !== null) {
+            message.score = object.score;
+        }
+        else {
+            message.score = 0;
+        }
+        if (object.description !== undefined && object.description !== null) {
+            message.description = object.description;
+        }
+        else {
+            message.description = "";
+        }
+        return message;
+    },
+};
+const baseMsgCreateReviewResponse = { id: 0 };
+export const MsgCreateReviewResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.id !== 0) {
+            writer.uint32(8).uint64(message.id);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseMsgCreateReviewResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.id = longToNumber(reader.uint64());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = {
+            ...baseMsgCreateReviewResponse,
+        };
+        if (object.id !== undefined && object.id !== null) {
+            message.id = Number(object.id);
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.id !== undefined && (obj.id = message.id);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = {
+            ...baseMsgCreateReviewResponse,
+        };
+        if (object.id !== undefined && object.id !== null) {
+            message.id = object.id;
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+};
+const baseMsgUpdateReview = {
+    creator: "",
+    id: 0,
+    score: 0,
+    description: "",
+};
+export const MsgUpdateReview = {
+    encode(message, writer = Writer.create()) {
+        if (message.creator !== "") {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.id !== 0) {
+            writer.uint32(16).uint64(message.id);
+        }
+        if (message.score !== 0) {
+            writer.uint32(24).uint32(message.score);
+        }
+        if (message.description !== "") {
+            writer.uint32(34).string(message.description);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseMsgUpdateReview };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.creator = reader.string();
+                    break;
+                case 2:
+                    message.id = longToNumber(reader.uint64());
+                    break;
+                case 3:
+                    message.score = reader.uint32();
+                    break;
+                case 4:
+                    message.description = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseMsgUpdateReview };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = Number(object.id);
+        }
+        else {
+            message.id = 0;
+        }
+        if (object.score !== undefined && object.score !== null) {
+            message.score = Number(object.score);
+        }
+        else {
+            message.score = 0;
+        }
+        if (object.description !== undefined && object.description !== null) {
+            message.description = String(object.description);
+        }
+        else {
+            message.description = "";
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.id !== undefined && (obj.id = message.id);
+        message.score !== undefined && (obj.score = message.score);
+        message.description !== undefined &&
+            (obj.description = message.description);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseMsgUpdateReview };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = object.id;
+        }
+        else {
+            message.id = 0;
+        }
+        if (object.score !== undefined && object.score !== null) {
+            message.score = object.score;
+        }
+        else {
+            message.score = 0;
+        }
+        if (object.description !== undefined && object.description !== null) {
+            message.description = object.description;
+        }
+        else {
+            message.description = "";
+        }
+        return message;
+    },
+};
+const baseMsgUpdateReviewResponse = {};
+export const MsgUpdateReviewResponse = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseMsgUpdateReviewResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseMsgUpdateReviewResponse,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseMsgUpdateReviewResponse,
+        };
+        return message;
+    },
+};
+const baseMsgDeleteReview = { creator: "", id: 0 };
+export const MsgDeleteReview = {
+    encode(message, writer = Writer.create()) {
+        if (message.creator !== "") {
+            writer.uint32(10).string(message.creator);
+        }
+        if (message.id !== 0) {
+            writer.uint32(16).uint64(message.id);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseMsgDeleteReview };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.creator = reader.string();
+                    break;
+                case 2:
+                    message.id = longToNumber(reader.uint64());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseMsgDeleteReview };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = Number(object.id);
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.creator !== undefined && (obj.creator = message.creator);
+        message.id !== undefined && (obj.id = message.id);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseMsgDeleteReview };
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = "";
+        }
+        if (object.id !== undefined && object.id !== null) {
+            message.id = object.id;
+        }
+        else {
+            message.id = 0;
+        }
+        return message;
+    },
+};
+const baseMsgDeleteReviewResponse = {};
+export const MsgDeleteReviewResponse = {
+    encode(_, writer = Writer.create()) {
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = {
+            ...baseMsgDeleteReviewResponse,
+        };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(_) {
+        const message = {
+            ...baseMsgDeleteReviewResponse,
+        };
+        return message;
+    },
+    toJSON(_) {
+        const obj = {};
+        return obj;
+    },
+    fromPartial(_) {
+        const message = {
+            ...baseMsgDeleteReviewResponse,
+        };
+        return message;
+    },
+};
 const baseMsgCreatePurchase = {
     creator: "",
     listing: 0,
@@ -1245,6 +1696,21 @@ export const MsgDeleteAccountResponse = {
 export class MsgClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
+    }
+    CreateReview(request) {
+        const data = MsgCreateReview.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Msg", "CreateReview", data);
+        return promise.then((data) => MsgCreateReviewResponse.decode(new Reader(data)));
+    }
+    UpdateReview(request) {
+        const data = MsgUpdateReview.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Msg", "UpdateReview", data);
+        return promise.then((data) => MsgUpdateReviewResponse.decode(new Reader(data)));
+    }
+    DeleteReview(request) {
+        const data = MsgDeleteReview.encode(request).finish();
+        const promise = this.rpc.request("FloppyDisck.Mercury.Mercury.Msg", "DeleteReview", data);
+        return promise.then((data) => MsgDeleteReviewResponse.decode(new Reader(data)));
     }
     CreatePurchase(request) {
         const data = MsgCreatePurchase.encode(request).finish();

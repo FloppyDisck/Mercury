@@ -72,8 +72,8 @@ export const Price = {
         return message;
     },
 };
-const baseReview = { average: 0, count: 0, sum: 0 };
-export const Review = {
+const baseAvgReview = { average: 0, count: 0, sum: 0 };
+export const AvgReview = {
     encode(message, writer = Writer.create()) {
         if (message.average !== 0) {
             writer.uint32(8).uint32(message.average);
@@ -89,7 +89,7 @@ export const Review = {
     decode(input, length) {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseReview };
+        const message = { ...baseAvgReview };
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -110,7 +110,7 @@ export const Review = {
         return message;
     },
     fromJSON(object) {
-        const message = { ...baseReview };
+        const message = { ...baseAvgReview };
         if (object.average !== undefined && object.average !== null) {
             message.average = Number(object.average);
         }
@@ -139,7 +139,7 @@ export const Review = {
         return obj;
     },
     fromPartial(object) {
-        const message = { ...baseReview };
+        const message = { ...baseAvgReview };
         if (object.average !== undefined && object.average !== null) {
             message.average = object.average;
         }

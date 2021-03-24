@@ -23,10 +23,16 @@ func RegisterRoutes(clientCtx client.Context, r *mux.Router) {
 	registerQueryRoutes(clientCtx, r)
 	registerTxHandlers(clientCtx, r)
 
+	registerQueryRoutes(clientCtx, r)
+	registerTxHandlers(clientCtx, r)
+
 }
 
 func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
 	// this line is used by starport scaffolding # 3
+	r.HandleFunc("/Mercury/reviews/{id}", getReviewHandler(clientCtx)).Methods("GET")
+	r.HandleFunc("/Mercury/reviews", listReviewHandler(clientCtx)).Methods("GET")
+
 	r.HandleFunc("/Mercury/purchases/{id}", getPurchaseHandler(clientCtx)).Methods("GET")
 	r.HandleFunc("/Mercury/purchases", listPurchaseHandler(clientCtx)).Methods("GET")
 
@@ -40,6 +46,10 @@ func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
 
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
 	// this line is used by starport scaffolding # 4
+	r.HandleFunc("/Mercury/reviews", createReviewHandler(clientCtx)).Methods("POST")
+	r.HandleFunc("/Mercury/reviews/{id}", updateReviewHandler(clientCtx)).Methods("POST")
+	r.HandleFunc("/Mercury/reviews/{id}", deleteReviewHandler(clientCtx)).Methods("POST")
+
 	r.HandleFunc("/Mercury/purchases", createPurchaseHandler(clientCtx)).Methods("POST")
 	r.HandleFunc("/Mercury/purchases/{id}", updatePurchaseHandler(clientCtx)).Methods("POST")
 	r.HandleFunc("/Mercury/purchases/{id}", deletePurchaseHandler(clientCtx)).Methods("POST")

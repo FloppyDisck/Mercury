@@ -1,11 +1,13 @@
 import { txClient, queryClient } from './module';
 // @ts-ignore
 import { SpVuexError } from '@starport/vuex';
-import { Account } from "./module/types/Mercury/account";
 import { Purchase } from "./module/types/Mercury/purchase";
 import { Listing } from "./module/types/Mercury/listing";
 import { Price } from "./module/types/Mercury/util";
-import { Review } from "./module/types/Mercury/util";
+import { AvgReview } from "./module/types/Mercury/util";
+import { Account } from "./module/types/Mercury/account";
+import { Reviewed } from "./module/types/Mercury/review";
+import { Review } from "./module/types/Mercury/review";
 async function initTxClient(vuexGetters) {
     return await txClient(vuexGetters['common/wallet/signer'], {
         addr: vuexGetters['common/env/apiTendermint']
@@ -28,6 +30,11 @@ function getStructure(template) {
 }
 const getDefaultState = () => {
     return {
+        Review: {},
+        ReviewAll: {},
+        ReviewWithScore: {},
+        ReviewWithReviewer: {},
+        ReviewWithReviewed: {},
         Purchase: {},
         PurchaseAll: {},
         PurchaseWithListing: {},
@@ -43,10 +50,12 @@ const getDefaultState = () => {
         AccountWithName: {},
         AccountWithReview: {},
         _Structure: {
-            Account: getStructure(Account.fromPartial({})),
             Purchase: getStructure(Purchase.fromPartial({})),
             Listing: getStructure(Listing.fromPartial({})),
             Price: getStructure(Price.fromPartial({})),
+            AvgReview: getStructure(AvgReview.fromPartial({})),
+            Account: getStructure(Account.fromPartial({})),
+            Reviewed: getStructure(Reviewed.fromPartial({})),
             Review: getStructure(Review.fromPartial({})),
         },
         _Subscriptions: new Set(),
@@ -72,6 +81,36 @@ export default {
         }
     },
     getters: {
+        getReview: (state) => (params = {}) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.Review[JSON.stringify(params)] ?? {};
+        },
+        getReviewAll: (state) => (params = {}) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.ReviewAll[JSON.stringify(params)] ?? {};
+        },
+        getReviewWithScore: (state) => (params = {}) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.ReviewWithScore[JSON.stringify(params)] ?? {};
+        },
+        getReviewWithReviewer: (state) => (params = {}) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.ReviewWithReviewer[JSON.stringify(params)] ?? {};
+        },
+        getReviewWithReviewed: (state) => (params = {}) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.ReviewWithReviewed[JSON.stringify(params)] ?? {};
+        },
         getPurchase: (state) => (params = {}) => {
             if (!params.query) {
                 params.query = null;
@@ -179,6 +218,115 @@ export default {
             state._Subscriptions.forEach((subscription) => {
                 dispatch(subscription.action, subscription.payload);
             });
+        },
+        async QueryReview({ commit, rootGetters, getters }, { options: { subscribe = false, all = false }, params: { ...key }, query = null }) {
+            try {
+                let value = query ? (await (await initQueryClient(rootGetters)).queryReview(key.id, query)).data : (await (await initQueryClient(rootGetters)).queryReview(key.id)).data;
+                commit('QUERY', { query: 'Review', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryReview', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getReview']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                console.error(new SpVuexError('QueryClient:QueryReview', 'API Node Unavailable. Could not perform query.'));
+                return {};
+            }
+        },
+        async QueryReviewAll({ commit, rootGetters, getters }, { options: { subscribe = false, all = false }, params: { ...key }, query = null }) {
+            try {
+                let value = query ? (await (await initQueryClient(rootGetters)).queryReviewAll(query)).data : (await (await initQueryClient(rootGetters)).queryReviewAll()).data;
+                while (all && value.pagination && value.pagination.nextKey != null) {
+                    let next_values = (await (await initQueryClient(rootGetters)).queryReviewAll({ ...query, 'pagination.key': value.pagination.nextKey })).data;
+                    for (let prop of Object.keys(next_values)) {
+                        if (Array.isArray(next_values[prop])) {
+                            value[prop] = [...value[prop], ...next_values[prop]];
+                        }
+                        else {
+                            value[prop] = next_values[prop];
+                        }
+                    }
+                }
+                commit('QUERY', { query: 'ReviewAll', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryReviewAll', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getReviewAll']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                console.error(new SpVuexError('QueryClient:QueryReviewAll', 'API Node Unavailable. Could not perform query.'));
+                return {};
+            }
+        },
+        async QueryReviewWithScore({ commit, rootGetters, getters }, { options: { subscribe = false, all = false }, params: { ...key }, query = null }) {
+            try {
+                let value = query ? (await (await initQueryClient(rootGetters)).queryReviewWithScore(key.score, query)).data : (await (await initQueryClient(rootGetters)).queryReviewWithScore(key.score)).data;
+                while (all && value.pagination && value.pagination.nextKey != null) {
+                    let next_values = (await (await initQueryClient(rootGetters)).queryReviewWithScore(key.score, { ...query, 'pagination.key': value.pagination.nextKey })).data;
+                    for (let prop of Object.keys(next_values)) {
+                        if (Array.isArray(next_values[prop])) {
+                            value[prop] = [...value[prop], ...next_values[prop]];
+                        }
+                        else {
+                            value[prop] = next_values[prop];
+                        }
+                    }
+                }
+                commit('QUERY', { query: 'ReviewWithScore', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryReviewWithScore', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getReviewWithScore']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                console.error(new SpVuexError('QueryClient:QueryReviewWithScore', 'API Node Unavailable. Could not perform query.'));
+                return {};
+            }
+        },
+        async QueryReviewWithReviewer({ commit, rootGetters, getters }, { options: { subscribe = false, all = false }, params: { ...key }, query = null }) {
+            try {
+                let value = query ? (await (await initQueryClient(rootGetters)).queryReviewWithReviewer(key.creator, query)).data : (await (await initQueryClient(rootGetters)).queryReviewWithReviewer(key.creator)).data;
+                while (all && value.pagination && value.pagination.nextKey != null) {
+                    let next_values = (await (await initQueryClient(rootGetters)).queryReviewWithReviewer(key.creator, { ...query, 'pagination.key': value.pagination.nextKey })).data;
+                    for (let prop of Object.keys(next_values)) {
+                        if (Array.isArray(next_values[prop])) {
+                            value[prop] = [...value[prop], ...next_values[prop]];
+                        }
+                        else {
+                            value[prop] = next_values[prop];
+                        }
+                    }
+                }
+                commit('QUERY', { query: 'ReviewWithReviewer', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryReviewWithReviewer', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getReviewWithReviewer']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                console.error(new SpVuexError('QueryClient:QueryReviewWithReviewer', 'API Node Unavailable. Could not perform query.'));
+                return {};
+            }
+        },
+        async QueryReviewWithReviewed({ commit, rootGetters, getters }, { options: { subscribe = false, all = false }, params: { ...key }, query = null }) {
+            try {
+                let value = query ? (await (await initQueryClient(rootGetters)).queryReviewWithReviewed(key.type, key.id, query)).data : (await (await initQueryClient(rootGetters)).queryReviewWithReviewed(key.type, key.id)).data;
+                while (all && value.pagination && value.pagination.nextKey != null) {
+                    let next_values = (await (await initQueryClient(rootGetters)).queryReviewWithReviewed(key.type, key.id, { ...query, 'pagination.key': value.pagination.nextKey })).data;
+                    for (let prop of Object.keys(next_values)) {
+                        if (Array.isArray(next_values[prop])) {
+                            value[prop] = [...value[prop], ...next_values[prop]];
+                        }
+                        else {
+                            value[prop] = next_values[prop];
+                        }
+                    }
+                }
+                commit('QUERY', { query: 'ReviewWithReviewed', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryReviewWithReviewed', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getReviewWithReviewed']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                console.error(new SpVuexError('QueryClient:QueryReviewWithReviewed', 'API Node Unavailable. Could not perform query.'));
+                return {};
+            }
         },
         async QueryPurchase({ commit, rootGetters, getters }, { options: { subscribe = false, all = false }, params: { ...key }, query = null }) {
             try {
@@ -472,6 +620,102 @@ export default {
                 return {};
             }
         },
+        async sendMsgUpdateReview({ rootGetters }, { value, fee, memo }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgUpdateReview(value);
+                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgUpdateReview:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgUpdateReview:Send', 'Could not broadcast Tx.');
+                }
+            }
+        },
+        async sendMsgDeletePurchase({ rootGetters }, { value, fee, memo }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgDeletePurchase(value);
+                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgDeletePurchase:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgDeletePurchase:Send', 'Could not broadcast Tx.');
+                }
+            }
+        },
+        async sendMsgUpdatePurchase({ rootGetters }, { value, fee, memo }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgUpdatePurchase(value);
+                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgUpdatePurchase:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgUpdatePurchase:Send', 'Could not broadcast Tx.');
+                }
+            }
+        },
+        async sendMsgDeleteAccount({ rootGetters }, { value, fee, memo }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgDeleteAccount(value);
+                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgDeleteAccount:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgDeleteAccount:Send', 'Could not broadcast Tx.');
+                }
+            }
+        },
+        async sendMsgUpdateAccount({ rootGetters }, { value, fee, memo }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgUpdateAccount(value);
+                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgUpdateAccount:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgUpdateAccount:Send', 'Could not broadcast Tx.');
+                }
+            }
+        },
+        async sendMsgCreateReview({ rootGetters }, { value, fee, memo }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgCreateReview(value);
+                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
+                        gas: "200000" }, memo });
+                return result;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgCreateReview:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgCreateReview:Send', 'Could not broadcast Tx.');
+                }
+            }
+        },
         async sendMsgDeleteListing({ rootGetters }, { value, fee, memo }) {
             try {
                 const msg = await (await initTxClient(rootGetters)).msgDeleteListing(value);
@@ -504,51 +748,19 @@ export default {
                 }
             }
         },
-        async sendMsgUpdateAccount({ rootGetters }, { value, fee, memo }) {
+        async sendMsgCreateListing({ rootGetters }, { value, fee, memo }) {
             try {
-                const msg = await (await initTxClient(rootGetters)).msgUpdateAccount(value);
+                const msg = await (await initTxClient(rootGetters)).msgCreateListing(value);
                 const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
                         gas: "200000" }, memo });
                 return result;
             }
             catch (e) {
                 if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgUpdateAccount:Init', 'Could not initialize signing client. Wallet is required.');
+                    throw new SpVuexError('TxClient:MsgCreateListing:Init', 'Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new SpVuexError('TxClient:MsgUpdateAccount:Send', 'Could not broadcast Tx.');
-                }
-            }
-        },
-        async sendMsgDeletePurchase({ rootGetters }, { value, fee, memo }) {
-            try {
-                const msg = await (await initTxClient(rootGetters)).msgDeletePurchase(value);
-                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
-                        gas: "200000" }, memo });
-                return result;
-            }
-            catch (e) {
-                if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgDeletePurchase:Init', 'Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new SpVuexError('TxClient:MsgDeletePurchase:Send', 'Could not broadcast Tx.');
-                }
-            }
-        },
-        async sendMsgUpdateListing({ rootGetters }, { value, fee, memo }) {
-            try {
-                const msg = await (await initTxClient(rootGetters)).msgUpdateListing(value);
-                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
-                        gas: "200000" }, memo });
-                return result;
-            }
-            catch (e) {
-                if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgUpdateListing:Init', 'Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new SpVuexError('TxClient:MsgUpdateListing:Send', 'Could not broadcast Tx.');
+                    throw new SpVuexError('TxClient:MsgCreateListing:Send', 'Could not broadcast Tx.');
                 }
             }
         },
@@ -568,51 +780,119 @@ export default {
                 }
             }
         },
-        async sendMsgDeleteAccount({ rootGetters }, { value, fee, memo }) {
+        async sendMsgDeleteReview({ rootGetters }, { value, fee, memo }) {
             try {
-                const msg = await (await initTxClient(rootGetters)).msgDeleteAccount(value);
+                const msg = await (await initTxClient(rootGetters)).msgDeleteReview(value);
                 const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
                         gas: "200000" }, memo });
                 return result;
             }
             catch (e) {
                 if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgDeleteAccount:Init', 'Could not initialize signing client. Wallet is required.');
+                    throw new SpVuexError('TxClient:MsgDeleteReview:Init', 'Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new SpVuexError('TxClient:MsgDeleteAccount:Send', 'Could not broadcast Tx.');
+                    throw new SpVuexError('TxClient:MsgDeleteReview:Send', 'Could not broadcast Tx.');
                 }
             }
         },
-        async sendMsgUpdatePurchase({ rootGetters }, { value, fee, memo }) {
+        async sendMsgUpdateListing({ rootGetters }, { value, fee, memo }) {
             try {
-                const msg = await (await initTxClient(rootGetters)).msgUpdatePurchase(value);
+                const msg = await (await initTxClient(rootGetters)).msgUpdateListing(value);
                 const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
                         gas: "200000" }, memo });
                 return result;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgUpdateListing:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgUpdateListing:Send', 'Could not broadcast Tx.');
+                }
+            }
+        },
+        async MsgUpdateReview({ rootGetters }, { value }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgUpdateReview(value);
+                return msg;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgUpdateReview:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgUpdateReview:Create', 'Could not create message.');
+                }
+            }
+        },
+        async MsgDeletePurchase({ rootGetters }, { value }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgDeletePurchase(value);
+                return msg;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgDeletePurchase:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgDeletePurchase:Create', 'Could not create message.');
+                }
+            }
+        },
+        async MsgUpdatePurchase({ rootGetters }, { value }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgUpdatePurchase(value);
+                return msg;
             }
             catch (e) {
                 if (e.toString() == 'wallet is required') {
                     throw new SpVuexError('TxClient:MsgUpdatePurchase:Init', 'Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new SpVuexError('TxClient:MsgUpdatePurchase:Send', 'Could not broadcast Tx.');
+                    throw new SpVuexError('TxClient:MsgUpdatePurchase:Create', 'Could not create message.');
                 }
             }
         },
-        async sendMsgCreateListing({ rootGetters }, { value, fee, memo }) {
+        async MsgDeleteAccount({ rootGetters }, { value }) {
             try {
-                const msg = await (await initTxClient(rootGetters)).msgCreateListing(value);
-                const result = await (await initTxClient(rootGetters)).signAndBroadcast([msg], { fee: { amount: fee,
-                        gas: "200000" }, memo });
-                return result;
+                const msg = await (await initTxClient(rootGetters)).msgDeleteAccount(value);
+                return msg;
             }
             catch (e) {
                 if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgCreateListing:Init', 'Could not initialize signing client. Wallet is required.');
+                    throw new SpVuexError('TxClient:MsgDeleteAccount:Init', 'Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new SpVuexError('TxClient:MsgCreateListing:Send', 'Could not broadcast Tx.');
+                    throw new SpVuexError('TxClient:MsgDeleteAccount:Create', 'Could not create message.');
+                }
+            }
+        },
+        async MsgUpdateAccount({ rootGetters }, { value }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgUpdateAccount(value);
+                return msg;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgUpdateAccount:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgUpdateAccount:Create', 'Could not create message.');
+                }
+            }
+        },
+        async MsgCreateReview({ rootGetters }, { value }) {
+            try {
+                const msg = await (await initTxClient(rootGetters)).msgCreateReview(value);
+                return msg;
+            }
+            catch (e) {
+                if (e.toString() == 'wallet is required') {
+                    throw new SpVuexError('TxClient:MsgCreateReview:Init', 'Could not initialize signing client. Wallet is required.');
+                }
+                else {
+                    throw new SpVuexError('TxClient:MsgCreateReview:Create', 'Could not create message.');
                 }
             }
         },
@@ -644,45 +924,17 @@ export default {
                 }
             }
         },
-        async MsgUpdateAccount({ rootGetters }, { value }) {
+        async MsgCreateListing({ rootGetters }, { value }) {
             try {
-                const msg = await (await initTxClient(rootGetters)).msgUpdateAccount(value);
+                const msg = await (await initTxClient(rootGetters)).msgCreateListing(value);
                 return msg;
             }
             catch (e) {
                 if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgUpdateAccount:Init', 'Could not initialize signing client. Wallet is required.');
+                    throw new SpVuexError('TxClient:MsgCreateListing:Init', 'Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new SpVuexError('TxClient:MsgUpdateAccount:Create', 'Could not create message.');
-                }
-            }
-        },
-        async MsgDeletePurchase({ rootGetters }, { value }) {
-            try {
-                const msg = await (await initTxClient(rootGetters)).msgDeletePurchase(value);
-                return msg;
-            }
-            catch (e) {
-                if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgDeletePurchase:Init', 'Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new SpVuexError('TxClient:MsgDeletePurchase:Create', 'Could not create message.');
-                }
-            }
-        },
-        async MsgUpdateListing({ rootGetters }, { value }) {
-            try {
-                const msg = await (await initTxClient(rootGetters)).msgUpdateListing(value);
-                return msg;
-            }
-            catch (e) {
-                if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgUpdateListing:Init', 'Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new SpVuexError('TxClient:MsgUpdateListing:Create', 'Could not create message.');
+                    throw new SpVuexError('TxClient:MsgCreateListing:Create', 'Could not create message.');
                 }
             }
         },
@@ -700,45 +952,31 @@ export default {
                 }
             }
         },
-        async MsgDeleteAccount({ rootGetters }, { value }) {
+        async MsgDeleteReview({ rootGetters }, { value }) {
             try {
-                const msg = await (await initTxClient(rootGetters)).msgDeleteAccount(value);
+                const msg = await (await initTxClient(rootGetters)).msgDeleteReview(value);
                 return msg;
             }
             catch (e) {
                 if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgDeleteAccount:Init', 'Could not initialize signing client. Wallet is required.');
+                    throw new SpVuexError('TxClient:MsgDeleteReview:Init', 'Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new SpVuexError('TxClient:MsgDeleteAccount:Create', 'Could not create message.');
+                    throw new SpVuexError('TxClient:MsgDeleteReview:Create', 'Could not create message.');
                 }
             }
         },
-        async MsgUpdatePurchase({ rootGetters }, { value }) {
+        async MsgUpdateListing({ rootGetters }, { value }) {
             try {
-                const msg = await (await initTxClient(rootGetters)).msgUpdatePurchase(value);
+                const msg = await (await initTxClient(rootGetters)).msgUpdateListing(value);
                 return msg;
             }
             catch (e) {
                 if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgUpdatePurchase:Init', 'Could not initialize signing client. Wallet is required.');
+                    throw new SpVuexError('TxClient:MsgUpdateListing:Init', 'Could not initialize signing client. Wallet is required.');
                 }
                 else {
-                    throw new SpVuexError('TxClient:MsgUpdatePurchase:Create', 'Could not create message.');
-                }
-            }
-        },
-        async MsgCreateListing({ rootGetters }, { value }) {
-            try {
-                const msg = await (await initTxClient(rootGetters)).msgCreateListing(value);
-                return msg;
-            }
-            catch (e) {
-                if (e.toString() == 'wallet is required') {
-                    throw new SpVuexError('TxClient:MsgCreateListing:Init', 'Could not initialize signing client. Wallet is required.');
-                }
-                else {
-                    throw new SpVuexError('TxClient:MsgCreateListing:Create', 'Could not create message.');
+                    throw new SpVuexError('TxClient:MsgUpdateListing:Create', 'Could not create message.');
                 }
             }
         },

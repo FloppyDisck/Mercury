@@ -14,3 +14,8 @@ const (
 	QueryGetPurchase  = "get-purchase"
 	QueryListPurchase = "list-purchase"
 )
+
+const (
+	QueryGetReview  = "get-review"
+	QueryListReview = "list-review"
+)

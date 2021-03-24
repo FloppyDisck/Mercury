@@ -49,7 +49,7 @@ func (k Keeper) AppendListing(
 	// Create the listing
 	count := k.GetListingCount(ctx)
 
-	var review = types.Review{
+	var review = types.AvgReview{
 		Average: 0,
 		Count:   0,
 		Sum:     0,
@@ -75,7 +75,7 @@ func (k Keeper) AppendListing(
 
 	countStr := strconv.FormatUint(count, 10)
 	reviewStr := strconv.Itoa(int(review.Average))
-	// Extra account key stores
+	// Extra key stores
 	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ListingNameKey)).Set(types.GetStringBytes(name+"-"+countStr), value)
 	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ListingReviewKey)).Set(types.GetStringBytes(reviewStr+"-"+countStr), value)
 	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ListingSellerKey)).Set(types.GetStringBytes(creator+"-"+countStr), value)
@@ -105,6 +105,15 @@ func (k Keeper) AddListingReview(ctx sdk.Context, id uint64, review uint32) {
 	listing := k.GetListing(ctx, id)
 	listing.Review.Count++
 	listing.Review.Sum += review
+	listing.Review.Average = listing.Review.Sum / listing.Review.Count
+	k.SetListing(ctx, listing)
+}
+
+// RemoveListingReview calculate new average
+func (k Keeper) RemoveListingReview(ctx sdk.Context, id uint64, review uint32) {
+	listing := k.GetListing(ctx, id)
+	listing.Review.Count--
+	listing.Review.Sum -= review
 	listing.Review.Average = listing.Review.Sum / listing.Review.Count
 	k.SetListing(ctx, listing)
 }

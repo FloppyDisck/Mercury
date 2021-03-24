@@ -5,13 +5,15 @@ option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
 
 import "gogoproto/gogo.proto";
 
-import "Mercury/util.proto";
+message Reviewed {
+  string type = 1;
+  uint64 id = 2;
+}
 
-message Listing {
+message Review {
   string creator = 1;
   uint64 id = 2;
-  Price  price = 3;
-  string name = 4; 
-  string description = 5;
-  AvgReview review = 6;
+  Reviewed reviewed = 3;
+  uint32 score = 4;
+  string description = 5; 
 }

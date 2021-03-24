@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Review } from "../Mercury/review";
 import { Purchase } from "../Mercury/purchase";
 import { Listing } from "../Mercury/listing";
 import { Account } from "../Mercury/account";
@@ -9,6 +10,8 @@ export const protobufPackage = "FloppyDisck.Mercury.Mercury";
 /** GenesisState defines the capability module's genesis state. */
 export interface GenesisState {
   /** this line is used by starport scaffolding # genesis/proto/state */
+  reviewList: Review[];
+  /** this line is used by starport scaffolding # genesis/proto/stateField */
   purchaseList: Purchase[];
   /** this line is used by starport scaffolding # genesis/proto/stateField */
   listingList: Listing[];
@@ -20,6 +23,9 @@ const baseGenesisState: object = {};
 
 export const GenesisState = {
   encode(message: GenesisState, writer: Writer = Writer.create()): Writer {
+    for (const v of message.reviewList) {
+      Review.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
     for (const v of message.purchaseList) {
       Purchase.encode(v!, writer.uint32(26).fork()).ldelim();
     }
@@ -36,12 +42,16 @@ export const GenesisState = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGenesisState } as GenesisState;
+    message.reviewList = [];
     message.purchaseList = [];
     message.listingList = [];
     message.accountList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 4:
+          message.reviewList.push(Review.decode(reader, reader.uint32()));
+          break;
         case 3:
           message.purchaseList.push(Purchase.decode(reader, reader.uint32()));
           break;
@@ -61,9 +71,15 @@ export const GenesisState = {
 
   fromJSON(object: any): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
+    message.reviewList = [];
     message.purchaseList = [];
     message.listingList = [];
     message.accountList = [];
+    if (object.reviewList !== undefined && object.reviewList !== null) {
+      for (const e of object.reviewList) {
+        message.reviewList.push(Review.fromJSON(e));
+      }
+    }
     if (object.purchaseList !== undefined && object.purchaseList !== null) {
       for (const e of object.purchaseList) {
         message.purchaseList.push(Purchase.fromJSON(e));
@@ -84,6 +100,13 @@ export const GenesisState = {
 
   toJSON(message: GenesisState): unknown {
     const obj: any = {};
+    if (message.reviewList) {
+      obj.reviewList = message.reviewList.map((e) =>
+        e ? Review.toJSON(e) : undefined
+      );
+    } else {
+      obj.reviewList = [];
+    }
     if (message.purchaseList) {
       obj.purchaseList = message.purchaseList.map((e) =>
         e ? Purchase.toJSON(e) : undefined
@@ -110,9 +133,15 @@ export const GenesisState = {
 
   fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
+    message.reviewList = [];
     message.purchaseList = [];
     message.listingList = [];
     message.accountList = [];
+    if (object.reviewList !== undefined && object.reviewList !== null) {
+      for (const e of object.reviewList) {
+        message.reviewList.push(Review.fromPartial(e));
+      }
+    }
     if (object.purchaseList !== undefined && object.purchaseList !== null) {
       for (const e of object.purchaseList) {
         message.purchaseList.push(Purchase.fromPartial(e));

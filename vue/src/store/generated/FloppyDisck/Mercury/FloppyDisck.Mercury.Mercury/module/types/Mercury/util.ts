@@ -9,7 +9,7 @@ export interface Price {
   currency: string;
 }
 
-export interface Review {
+export interface AvgReview {
   average: number;
   count: number;
   sum: number;
@@ -87,10 +87,10 @@ export const Price = {
   },
 };
 
-const baseReview: object = { average: 0, count: 0, sum: 0 };
+const baseAvgReview: object = { average: 0, count: 0, sum: 0 };
 
-export const Review = {
-  encode(message: Review, writer: Writer = Writer.create()): Writer {
+export const AvgReview = {
+  encode(message: AvgReview, writer: Writer = Writer.create()): Writer {
     if (message.average !== 0) {
       writer.uint32(8).uint32(message.average);
     }
@@ -103,10 +103,10 @@ export const Review = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Review {
+  decode(input: Reader | Uint8Array, length?: number): AvgReview {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseReview } as Review;
+    const message = { ...baseAvgReview } as AvgReview;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -127,8 +127,8 @@ export const Review = {
     return message;
   },
 
-  fromJSON(object: any): Review {
-    const message = { ...baseReview } as Review;
+  fromJSON(object: any): AvgReview {
+    const message = { ...baseAvgReview } as AvgReview;
     if (object.average !== undefined && object.average !== null) {
       message.average = Number(object.average);
     } else {
@@ -147,7 +147,7 @@ export const Review = {
     return message;
   },
 
-  toJSON(message: Review): unknown {
+  toJSON(message: AvgReview): unknown {
     const obj: any = {};
     message.average !== undefined && (obj.average = message.average);
     message.count !== undefined && (obj.count = message.count);
@@ -155,8 +155,8 @@ export const Review = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Review>): Review {
-    const message = { ...baseReview } as Review;
+  fromPartial(object: DeepPartial<AvgReview>): AvgReview {
+    const message = { ...baseAvgReview } as AvgReview;
     if (object.average !== undefined && object.average !== null) {
       message.average = object.average;
     } else {

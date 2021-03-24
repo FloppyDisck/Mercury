@@ -46,7 +46,7 @@ func (k Keeper) AppendAccount(
 	// Create the account
 	count := k.GetAccountCount(ctx)
 
-	var review = types.Review{
+	var review = types.AvgReview{
 		Average: 0,
 		Count:   0,
 		Sum:     0,
@@ -96,6 +96,15 @@ func (k Keeper) AddAccountReview(ctx sdk.Context, id uint64, review uint32) {
 	account := k.GetAccount(ctx, id)
 	account.Review.Count++
 	account.Review.Sum += review
+	account.Review.Average = account.Review.Sum / account.Review.Count
+	k.SetAccount(ctx, account)
+}
+
+// RemoveAccountReview calculate new average
+func (k Keeper) RemoveAccountReview(ctx sdk.Context, id uint64, review uint32) {
+	account := k.GetAccount(ctx, id)
+	account.Review.Count--
+	account.Review.Sum -= review
 	account.Review.Average = account.Review.Sum / account.Review.Count
 	k.SetAccount(ctx, account)
 }

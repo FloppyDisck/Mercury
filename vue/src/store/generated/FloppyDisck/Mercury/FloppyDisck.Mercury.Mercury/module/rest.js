@@ -320,11 +320,80 @@ export class Api extends HttpClient {
          *
          * @tags Query
          * @name QueryPurchase
-         * @summary this line is used by starport scaffolding # 2
          * @request GET:/FloppyDisck/Mercury/Mercury/purchase/{id}
          */
         this.queryPurchase = (id, params = {}) => this.request({
             path: `/FloppyDisck/Mercury/Mercury/purchase/${id}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryReviewAll
+         * @request GET:/FloppyDisck/Mercury/Mercury/review
+         */
+        this.queryReviewAll = (query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/review`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryReviewWithReviewed
+         * @request GET:/FloppyDisck/Mercury/Mercury/review/from/{type}/{id}
+         */
+        this.queryReviewWithReviewed = (type, id, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/review/from/${type}/${id}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryReviewWithReviewer
+         * @request GET:/FloppyDisck/Mercury/Mercury/review/reviewer/{creator}
+         */
+        this.queryReviewWithReviewer = (creator, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/review/reviewer/${creator}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryReviewWithScore
+         * @request GET:/FloppyDisck/Mercury/Mercury/review/score/{score}
+         */
+        this.queryReviewWithScore = (score, query, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/review/score/${score}`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryReview
+         * @summary this line is used by starport scaffolding # 2
+         * @request GET:/FloppyDisck/Mercury/Mercury/review/{id}
+         */
+        this.queryReview = (id, params = {}) => this.request({
+            path: `/FloppyDisck/Mercury/Mercury/review/${id}`,
             method: "GET",
             format: "json",
             ...params,

@@ -1,6 +1,30 @@
 import { Reader, Writer } from "protobufjs/minimal";
 export declare const protobufPackage = "FloppyDisck.Mercury.Mercury";
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgCreateReview {
+    creator: string;
+    reviewType: string;
+    reviewId: number;
+    score: number;
+    description: string;
+}
+export interface MsgCreateReviewResponse {
+    id: number;
+}
+export interface MsgUpdateReview {
+    creator: string;
+    id: number;
+    score: number;
+    description: string;
+}
+export interface MsgUpdateReviewResponse {
+}
+export interface MsgDeleteReview {
+    creator: string;
+    id: number;
+}
+export interface MsgDeleteReviewResponse {
+}
 export interface MsgCreatePurchase {
     creator: string;
     listing: number;
@@ -68,6 +92,48 @@ export interface MsgDeleteAccount {
 }
 export interface MsgDeleteAccountResponse {
 }
+export declare const MsgCreateReview: {
+    encode(message: MsgCreateReview, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateReview;
+    fromJSON(object: any): MsgCreateReview;
+    toJSON(message: MsgCreateReview): unknown;
+    fromPartial(object: DeepPartial<MsgCreateReview>): MsgCreateReview;
+};
+export declare const MsgCreateReviewResponse: {
+    encode(message: MsgCreateReviewResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateReviewResponse;
+    fromJSON(object: any): MsgCreateReviewResponse;
+    toJSON(message: MsgCreateReviewResponse): unknown;
+    fromPartial(object: DeepPartial<MsgCreateReviewResponse>): MsgCreateReviewResponse;
+};
+export declare const MsgUpdateReview: {
+    encode(message: MsgUpdateReview, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateReview;
+    fromJSON(object: any): MsgUpdateReview;
+    toJSON(message: MsgUpdateReview): unknown;
+    fromPartial(object: DeepPartial<MsgUpdateReview>): MsgUpdateReview;
+};
+export declare const MsgUpdateReviewResponse: {
+    encode(_: MsgUpdateReviewResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateReviewResponse;
+    fromJSON(_: any): MsgUpdateReviewResponse;
+    toJSON(_: MsgUpdateReviewResponse): unknown;
+    fromPartial(_: DeepPartial<MsgUpdateReviewResponse>): MsgUpdateReviewResponse;
+};
+export declare const MsgDeleteReview: {
+    encode(message: MsgDeleteReview, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteReview;
+    fromJSON(object: any): MsgDeleteReview;
+    toJSON(message: MsgDeleteReview): unknown;
+    fromPartial(object: DeepPartial<MsgDeleteReview>): MsgDeleteReview;
+};
+export declare const MsgDeleteReviewResponse: {
+    encode(_: MsgDeleteReviewResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteReviewResponse;
+    fromJSON(_: any): MsgDeleteReviewResponse;
+    toJSON(_: MsgDeleteReviewResponse): unknown;
+    fromPartial(_: DeepPartial<MsgDeleteReviewResponse>): MsgDeleteReviewResponse;
+};
 export declare const MsgCreatePurchase: {
     encode(message: MsgCreatePurchase, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreatePurchase;
@@ -197,6 +263,9 @@ export declare const MsgDeleteAccountResponse: {
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
+    CreateReview(request: MsgCreateReview): Promise<MsgCreateReviewResponse>;
+    UpdateReview(request: MsgUpdateReview): Promise<MsgUpdateReviewResponse>;
+    DeleteReview(request: MsgDeleteReview): Promise<MsgDeleteReviewResponse>;
     CreatePurchase(request: MsgCreatePurchase): Promise<MsgCreatePurchaseResponse>;
     UpdatePurchase(request: MsgUpdatePurchase): Promise<MsgUpdatePurchaseResponse>;
     DeletePurchase(request: MsgDeletePurchase): Promise<MsgDeletePurchaseResponse>;
@@ -210,6 +279,9 @@ export interface Msg {
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
+    CreateReview(request: MsgCreateReview): Promise<MsgCreateReviewResponse>;
+    UpdateReview(request: MsgUpdateReview): Promise<MsgUpdateReviewResponse>;
+    DeleteReview(request: MsgDeleteReview): Promise<MsgDeleteReviewResponse>;
     CreatePurchase(request: MsgCreatePurchase): Promise<MsgCreatePurchaseResponse>;
     UpdatePurchase(request: MsgUpdatePurchase): Promise<MsgUpdatePurchaseResponse>;
     DeletePurchase(request: MsgDeletePurchase): Promise<MsgDeletePurchaseResponse>;

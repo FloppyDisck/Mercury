@@ -1,10 +1,37 @@
 import { Reader, Writer } from "protobufjs/minimal";
-import { Purchase } from "../Mercury/purchase";
+import { Review } from "../Mercury/review";
 import { PageRequest, PageResponse } from "../cosmos/base/query/v1beta1/pagination";
+import { Purchase } from "../Mercury/purchase";
 import { Listing } from "../Mercury/listing";
 import { Account } from "../Mercury/account";
 export declare const protobufPackage = "FloppyDisck.Mercury.Mercury";
 /** this line is used by starport scaffolding # 3 */
+export interface QueryGetReviewRequest {
+    id: number;
+}
+export interface QueryGetReviewResponse {
+    Review: Review | undefined;
+}
+export interface QueryAllReviewRequest {
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllReviewWithScoreRequest {
+    score: number;
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllReviewWithReviewerRequest {
+    creator: string;
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllReviewWithReviewedRequest {
+    type: string;
+    id: number;
+    pagination: PageRequest | undefined;
+}
+export interface QueryAllReviewResponse {
+    Review: Review[];
+    pagination: PageResponse | undefined;
+}
 export interface QueryGetPurchaseRequest {
     id: number;
 }
@@ -75,6 +102,55 @@ export interface QueryAllAccountResponse {
     Account: Account[];
     pagination: PageResponse | undefined;
 }
+export declare const QueryGetReviewRequest: {
+    encode(message: QueryGetReviewRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetReviewRequest;
+    fromJSON(object: any): QueryGetReviewRequest;
+    toJSON(message: QueryGetReviewRequest): unknown;
+    fromPartial(object: DeepPartial<QueryGetReviewRequest>): QueryGetReviewRequest;
+};
+export declare const QueryGetReviewResponse: {
+    encode(message: QueryGetReviewResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryGetReviewResponse;
+    fromJSON(object: any): QueryGetReviewResponse;
+    toJSON(message: QueryGetReviewResponse): unknown;
+    fromPartial(object: DeepPartial<QueryGetReviewResponse>): QueryGetReviewResponse;
+};
+export declare const QueryAllReviewRequest: {
+    encode(message: QueryAllReviewRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllReviewRequest;
+    fromJSON(object: any): QueryAllReviewRequest;
+    toJSON(message: QueryAllReviewRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllReviewRequest>): QueryAllReviewRequest;
+};
+export declare const QueryAllReviewWithScoreRequest: {
+    encode(message: QueryAllReviewWithScoreRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllReviewWithScoreRequest;
+    fromJSON(object: any): QueryAllReviewWithScoreRequest;
+    toJSON(message: QueryAllReviewWithScoreRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllReviewWithScoreRequest>): QueryAllReviewWithScoreRequest;
+};
+export declare const QueryAllReviewWithReviewerRequest: {
+    encode(message: QueryAllReviewWithReviewerRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllReviewWithReviewerRequest;
+    fromJSON(object: any): QueryAllReviewWithReviewerRequest;
+    toJSON(message: QueryAllReviewWithReviewerRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllReviewWithReviewerRequest>): QueryAllReviewWithReviewerRequest;
+};
+export declare const QueryAllReviewWithReviewedRequest: {
+    encode(message: QueryAllReviewWithReviewedRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllReviewWithReviewedRequest;
+    fromJSON(object: any): QueryAllReviewWithReviewedRequest;
+    toJSON(message: QueryAllReviewWithReviewedRequest): unknown;
+    fromPartial(object: DeepPartial<QueryAllReviewWithReviewedRequest>): QueryAllReviewWithReviewedRequest;
+};
+export declare const QueryAllReviewResponse: {
+    encode(message: QueryAllReviewResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryAllReviewResponse;
+    fromJSON(object: any): QueryAllReviewResponse;
+    toJSON(message: QueryAllReviewResponse): unknown;
+    fromPartial(object: DeepPartial<QueryAllReviewResponse>): QueryAllReviewResponse;
+};
 export declare const QueryGetPurchaseRequest: {
     encode(message: QueryGetPurchaseRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryGetPurchaseRequest;
@@ -218,6 +294,11 @@ export declare const QueryAllAccountResponse: {
 /** Query defines the gRPC querier service. */
 export interface Query {
     /** this line is used by starport scaffolding # 2 */
+    Review(request: QueryGetReviewRequest): Promise<QueryGetReviewResponse>;
+    ReviewAll(request: QueryAllReviewRequest): Promise<QueryAllReviewResponse>;
+    ReviewWithScore(request: QueryAllReviewWithScoreRequest): Promise<QueryAllReviewResponse>;
+    ReviewWithReviewer(request: QueryAllReviewWithReviewerRequest): Promise<QueryAllReviewResponse>;
+    ReviewWithReviewed(request: QueryAllReviewWithReviewedRequest): Promise<QueryAllReviewResponse>;
     Purchase(request: QueryGetPurchaseRequest): Promise<QueryGetPurchaseResponse>;
     PurchaseAll(request: QueryAllPurchaseRequest): Promise<QueryAllPurchaseResponse>;
     PurchaseWithListing(request: QueryAllPurchaseWithListingRequest): Promise<QueryAllPurchaseResponse>;
@@ -236,6 +317,11 @@ export interface Query {
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
     constructor(rpc: Rpc);
+    Review(request: QueryGetReviewRequest): Promise<QueryGetReviewResponse>;
+    ReviewAll(request: QueryAllReviewRequest): Promise<QueryAllReviewResponse>;
+    ReviewWithScore(request: QueryAllReviewWithScoreRequest): Promise<QueryAllReviewResponse>;
+    ReviewWithReviewer(request: QueryAllReviewWithReviewerRequest): Promise<QueryAllReviewResponse>;
+    ReviewWithReviewed(request: QueryAllReviewWithReviewedRequest): Promise<QueryAllReviewResponse>;
     Purchase(request: QueryGetPurchaseRequest): Promise<QueryGetPurchaseResponse>;
     PurchaseAll(request: QueryAllPurchaseRequest): Promise<QueryAllPurchaseResponse>;
     PurchaseWithListing(request: QueryAllPurchaseWithListingRequest): Promise<QueryAllPurchaseResponse>;

@@ -3,7 +3,15 @@ export interface MercuryAccount {
     /** @format uint64 */
     id?: string;
     name?: string;
-    review?: MercuryReview;
+    review?: MercuryAvgReview;
+}
+export interface MercuryAvgReview {
+    /** @format int64 */
+    average?: number;
+    /** @format int64 */
+    count?: number;
+    /** @format int64 */
+    sum?: number;
 }
 export interface MercuryListing {
     creator?: string;
@@ -12,7 +20,7 @@ export interface MercuryListing {
     price?: MercuryPrice;
     name?: string;
     description?: string;
-    review?: MercuryReview;
+    review?: MercuryAvgReview;
 }
 export interface MercuryMsgCreateAccountResponse {
     /** @format uint64 */
@@ -26,12 +34,18 @@ export interface MercuryMsgCreatePurchaseResponse {
     /** @format uint64 */
     id?: string;
 }
+export interface MercuryMsgCreateReviewResponse {
+    /** @format uint64 */
+    id?: string;
+}
 export declare type MercuryMsgDeleteAccountResponse = object;
 export declare type MercuryMsgDeleteListingResponse = object;
 export declare type MercuryMsgDeletePurchaseResponse = object;
+export declare type MercuryMsgDeleteReviewResponse = object;
 export declare type MercuryMsgUpdateAccountResponse = object;
 export declare type MercuryMsgUpdateListingResponse = object;
 export declare type MercuryMsgUpdatePurchaseResponse = object;
+export declare type MercuryMsgUpdateReviewResponse = object;
 export interface MercuryPrice {
     /** @format uint64 */
     amount?: string;
@@ -85,6 +99,19 @@ export interface MercuryQueryAllPurchaseResponse {
      */
     pagination?: V1Beta1PageResponse;
 }
+export interface MercuryQueryAllReviewResponse {
+    Review?: MercuryReview[];
+    /**
+     * PageResponse is to be embedded in gRPC response messages where the
+     * corresponding request message has used PageRequest.
+     *
+     *  message SomeResponse {
+     *          repeated Bar results = 1;
+     *          PageResponse page = 2;
+     *  }
+     */
+    pagination?: V1Beta1PageResponse;
+}
 export interface MercuryQueryGetAccountResponse {
     Account?: MercuryAccount;
 }
@@ -94,13 +121,22 @@ export interface MercuryQueryGetListingResponse {
 export interface MercuryQueryGetPurchaseResponse {
     Purchase?: MercuryPurchase;
 }
+export interface MercuryQueryGetReviewResponse {
+    Review?: MercuryReview;
+}
 export interface MercuryReview {
+    creator?: string;
+    /** @format uint64 */
+    id?: string;
+    reviewed?: MercuryReviewed;
     /** @format int64 */
-    average?: number;
-    /** @format int64 */
-    count?: number;
-    /** @format int64 */
-    sum?: number;
+    score?: number;
+    description?: string;
+}
+export interface MercuryReviewed {
+    type?: string;
+    /** @format uint64 */
+    id?: string;
 }
 export interface ProtobufAny {
     typeUrl?: string;
@@ -380,9 +416,69 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      *
      * @tags Query
      * @name QueryPurchase
-     * @summary this line is used by starport scaffolding # 2
      * @request GET:/FloppyDisck/Mercury/Mercury/purchase/{id}
      */
     queryPurchase: (id: string, params?: RequestParams) => Promise<HttpResponse<MercuryQueryGetPurchaseResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryReviewAll
+     * @request GET:/FloppyDisck/Mercury/Mercury/review
+     */
+    queryReviewAll: (query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.countTotal"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<MercuryQueryAllReviewResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryReviewWithReviewed
+     * @request GET:/FloppyDisck/Mercury/Mercury/review/from/{type}/{id}
+     */
+    queryReviewWithReviewed: (type: string, id: string, query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.countTotal"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<MercuryQueryAllReviewResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryReviewWithReviewer
+     * @request GET:/FloppyDisck/Mercury/Mercury/review/reviewer/{creator}
+     */
+    queryReviewWithReviewer: (creator: string, query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.countTotal"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<MercuryQueryAllReviewResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryReviewWithScore
+     * @request GET:/FloppyDisck/Mercury/Mercury/review/score/{score}
+     */
+    queryReviewWithScore: (score: number, query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.countTotal"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<MercuryQueryAllReviewResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryReview
+     * @summary this line is used by starport scaffolding # 2
+     * @request GET:/FloppyDisck/Mercury/Mercury/review/{id}
+     */
+    queryReview: (id: string, params?: RequestParams) => Promise<HttpResponse<MercuryQueryGetReviewResponse, RpcStatus>>;
 }
 export {};

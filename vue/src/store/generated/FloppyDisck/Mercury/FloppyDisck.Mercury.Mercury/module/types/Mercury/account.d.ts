@@ -1,11 +1,11 @@
 import { Writer, Reader } from "protobufjs/minimal";
-import { Review } from "../Mercury/util";
+import { AvgReview } from "../Mercury/util";
 export declare const protobufPackage = "FloppyDisck.Mercury.Mercury";
 export interface Account {
     creator: string;
     id: number;
     name: string;
-    review: Review | undefined;
+    review: AvgReview | undefined;
 }
 export declare const Account: {
     encode(message: Account, writer?: Writer): Writer;

@@ -68,7 +68,9 @@ func (k Keeper) AppendPurchase(
 
 	countStr := strconv.FormatUint(count, 10)
 	listingStr := strconv.FormatUint(listing, 10)
-	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingKey)).Set(types.GetStringBytes(listingStr+"-"+countStr), value)
+	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingKey)).Set(types.GetStringBytes(listingStr+"-"+creator+"-"+countStr), value)
+	listingCreator := k.GetListingOwner(ctx, listing)
+	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingCreatorKey)).Set(types.GetStringBytes(listingCreator+"-"+creator+"-"+countStr), value)
 	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseBuyerKey)).Set(types.GetStringBytes(creator+"-"+countStr), value)
 
 	// Update purchase count
@@ -85,7 +87,9 @@ func (k Keeper) SetPurchase(ctx sdk.Context, purchase types.Purchase) {
 
 	countStr := strconv.FormatUint(purchase.Id, 10)
 	listingStr := strconv.FormatUint(purchase.Listing, 10)
-	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingKey)).Set(types.GetStringBytes(listingStr+"-"+countStr), b)
+	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingKey)).Set(types.GetStringBytes(listingStr+"-"+purchase.Creator+"-"+countStr), b)
+	listingCreator := k.GetListingOwner(ctx, purchase.Listing)
+	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingCreatorKey)).Set(types.GetStringBytes(listingCreator+"-"+purchase.Creator+"-"+countStr), b)
 	prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseBuyerKey)).Set(types.GetStringBytes(purchase.Creator+"-"+countStr), b)
 }
 
@@ -101,6 +105,36 @@ func (k Keeper) GetPurchase(ctx sdk.Context, id uint64) types.Purchase {
 func (k Keeper) HasPurchase(ctx sdk.Context, id uint64) bool {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseKey))
 	return store.Has(GetPurchaseIDBytes(id))
+}
+
+// HasPurchased checks if user has purchased a listing
+func (k Keeper) HasPurchased(ctx sdk.Context, id uint64, creator string) bool {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingKey))
+	listingStr := strconv.FormatUint(id, 10)
+	iterator := sdk.KVStorePrefixIterator(store, types.GetStringBytes(listingStr+"-"+creator))
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		return true
+	}
+
+	return false
+}
+
+// HasPurchasedListingAccount checks if user has purchased a listing related to that account
+func (k Keeper) HasPurchasedListingAccount(ctx sdk.Context, id uint64, creator string) bool {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.PurchaseListingCreatorKey))
+	accStr := strconv.FormatUint(id, 10)
+	iterator := sdk.KVStorePrefixIterator(store, types.GetStringBytes(accStr+"-"+creator))
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		return true
+	}
+
+	return false
 }
 
 // GetPurchaseOwner returns the creator of the purchase

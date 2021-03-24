@@ -49,8 +49,17 @@ const (
 )
 
 const (
-	PurchaseKey        = "Purchase-value-"
-	PurchaseListingKey = "Purchase-listing-"
-	PurchaseBuyerKey   = "Purchase-buyer-key-"
-	PurchaseCountKey   = "Purchase-count-"
+	PurchaseKey               = "Purchase-value-"
+	PurchaseListingKey        = "Purchase-listing-"
+	PurchaseListingCreatorKey = "Purchase-listing-creator-"
+	PurchaseBuyerKey          = "Purchase-buyer-key-"
+	PurchaseCountKey          = "Purchase-count-"
+)
+
+const (
+	ReviewKey         = "Review-value-"
+	ReviewScoreKey    = "Review-score-"
+	ReviewReviewerKey = "Review-reviewer-"
+	ReviewReviewedKey = "Review-reviewed-"
+	ReviewCountKey    = "Review-count-"
 )

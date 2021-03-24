@@ -10,7 +10,7 @@ message Price {
   string currency = 2;
 }
 
-message Review {
+message AvgReview {
   uint32 average = 1;
   uint32 count = 2;
   uint32 sum = 3;

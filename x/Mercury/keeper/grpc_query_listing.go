@@ -49,9 +49,9 @@ func (k Keeper) ListingWithSeller(c context.Context, req *types.QueryAllListingW
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	accountStore := prefix.NewStore(store, types.KeyPrefix(types.ListingSellerKey))
+	listingStore := prefix.NewStore(store, types.KeyPrefix(types.ListingSellerKey))
 
-	pageRes, err := types.PrefixPaginate(accountStore, types.KeyPrefix(req.Seller), req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := types.PrefixPaginate(listingStore, types.KeyPrefix(req.Seller), req.Pagination, func(key []byte, value []byte) error {
 		var listing types.Listing
 		if err := k.cdc.UnmarshalBinaryBare(value, &listing); err != nil {
 			return err
@@ -77,9 +77,9 @@ func (k Keeper) ListingWithReview(c context.Context, req *types.QueryAllListingW
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	accountStore := prefix.NewStore(store, types.KeyPrefix(types.ListingReviewKey))
+	listingStore := prefix.NewStore(store, types.KeyPrefix(types.ListingReviewKey))
 
-	pageRes, err := types.PrefixPaginate(accountStore, types.KeyPrefix(strconv.Itoa(int(req.Review))), req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := types.PrefixPaginate(listingStore, types.KeyPrefix(strconv.Itoa(int(req.Review))), req.Pagination, func(key []byte, value []byte) error {
 		var listing types.Listing
 		if err := k.cdc.UnmarshalBinaryBare(value, &listing); err != nil {
 			return err
@@ -105,9 +105,9 @@ func (k Keeper) ListingWithName(c context.Context, req *types.QueryAllListingWit
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	accountStore := prefix.NewStore(store, types.KeyPrefix(types.ListingNameKey))
+	listingStore := prefix.NewStore(store, types.KeyPrefix(types.ListingNameKey))
 
-	pageRes, err := types.PrefixPaginate(accountStore, types.KeyPrefix(req.Name), req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := types.PrefixPaginate(listingStore, types.KeyPrefix(req.Name), req.Pagination, func(key []byte, value []byte) error {
 		var listing types.Listing
 		if err := k.cdc.UnmarshalBinaryBare(value, &listing); err != nil {
 			return err
