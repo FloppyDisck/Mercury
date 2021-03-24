@@ -143,7 +143,7 @@ func CmdShowAccountWithReview() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			rev, _ := strconv.ParseUint(args[0], 2, 32)
+			rev, _ := strconv.ParseUint(args[0], 10, 32)
 
 			params := &types.QueryAllAccountWithReviewRequest{
 				Review:     uint32(rev),

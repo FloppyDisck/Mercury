@@ -10,17 +10,34 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 )
 
+// GetTXListing returns the cli edit commands for this module
+func GetTXListing() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                        "listing",
+		Short:                      "Listing editing",
+		DisableFlagParsing:         true,
+		SuggestionsMinimumDistance: 2,
+		RunE:                       client.ValidateCmd,
+	}
+
+	cmd.AddCommand(CmdCreateListing())
+	cmd.AddCommand(CmdUpdateListing())
+	cmd.AddCommand(CmdDeleteListing())
+
+	return cmd
+}
+
 func CmdCreateListing() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-listing [name] [amount] [currency] [description]",
+		Use:   "create [name] [amount] [currency] [description]",
 		Short: "Creates a new listing",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argsName := string(args[0])
-			argsAmount := string(args[1])
-			amount, _ := strconv.ParseUint(argsAmount, 2, 64)
-			argsCurrency := string(args[2])
-			argsDescription := string(args[3])
+			argsName := args[0]
+			argsAmount := args[1]
+			amount, _ := strconv.ParseUint(argsAmount, 10, 64)
+			argsCurrency := args[2]
+			argsDescription := args[3]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -42,7 +59,7 @@ func CmdCreateListing() *cobra.Command {
 
 func CmdUpdateListing() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-listing [id] [name] [amount] [currency] [description]",
+		Use:   "update [id] [name] [amount] [currency] [description]",
 		Short: "Update a listing",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -53,7 +70,7 @@ func CmdUpdateListing() *cobra.Command {
 
 			argsName := string(args[1])
 			argsAmount := string(args[2])
-			amount, _ := strconv.ParseUint(argsAmount, 2, 64)
+			amount, _ := strconv.ParseUint(argsAmount, 10, 64)
 			argsCurrency := string(args[3])
 			argsDescription := string(args[4])
 
@@ -77,7 +94,7 @@ func CmdUpdateListing() *cobra.Command {
 
 func CmdDeleteListing() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "delete-listing [id]",
+		Use:   "delete [id]",
 		Short: "Delete a listing by id",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

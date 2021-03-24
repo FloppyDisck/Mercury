@@ -10,9 +10,26 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 )
 
+// GetTXAccount returns the cli edit commands for this module
+func GetTXAccount() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                        "account",
+		Short:                      "Account editing",
+		DisableFlagParsing:         true,
+		SuggestionsMinimumDistance: 2,
+		RunE:                       client.ValidateCmd,
+	}
+
+	cmd.AddCommand(CmdCreateAccount())
+	cmd.AddCommand(CmdUpdateAccount())
+	cmd.AddCommand(CmdDeleteAccount())
+
+	return cmd
+}
+
 func CmdCreateAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-account [name]",
+		Use:   "create [name]",
 		Short: "Creates a new account",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -38,7 +55,7 @@ func CmdCreateAccount() *cobra.Command {
 
 func CmdUpdateAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-account [id] [name]",
+		Use:   "update [id] [name]",
 		Short: "Update a account",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -69,7 +86,7 @@ func CmdUpdateAccount() *cobra.Command {
 
 func CmdDeleteAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "delete-account [id]",
+		Use:   "delete [id]",
 		Short: "Delete a account by id",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

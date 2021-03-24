@@ -15,5 +15,5 @@ var (
 	ErrInvalidName        = sdkerrors.Register(ModuleName, 1104, "Name is invalid")
 	ErrInvalidDescription = sdkerrors.Register(ModuleName, 1105, "Description is invalid")
 	ErrInvalidReviewScore = sdkerrors.Register(ModuleName, 1106, "Review score is invalid")
-	ErrInvalidReviewType  = sdkerrors.Register(ModuleName, 1106, "Review type is invalid")
+	ErrInvalidReviewType  = sdkerrors.Register(ModuleName, 1107, "Review type is invalid")
 )

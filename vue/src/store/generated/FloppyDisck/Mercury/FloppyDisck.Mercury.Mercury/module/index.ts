@@ -4,33 +4,33 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgUpdateReview } from "./types/Mercury/tx";
-import { MsgDeletePurchase } from "./types/Mercury/tx";
 import { MsgUpdatePurchase } from "./types/Mercury/tx";
-import { MsgDeleteAccount } from "./types/Mercury/tx";
-import { MsgUpdateAccount } from "./types/Mercury/tx";
-import { MsgCreateReview } from "./types/Mercury/tx";
-import { MsgDeleteListing } from "./types/Mercury/tx";
 import { MsgCreateAccount } from "./types/Mercury/tx";
+import { MsgCreateReview } from "./types/Mercury/tx";
+import { MsgDeletePurchase } from "./types/Mercury/tx";
 import { MsgCreateListing } from "./types/Mercury/tx";
-import { MsgCreatePurchase } from "./types/Mercury/tx";
 import { MsgDeleteReview } from "./types/Mercury/tx";
 import { MsgUpdateListing } from "./types/Mercury/tx";
+import { MsgDeleteAccount } from "./types/Mercury/tx";
+import { MsgDeleteListing } from "./types/Mercury/tx";
+import { MsgUpdateReview } from "./types/Mercury/tx";
+import { MsgCreatePurchase } from "./types/Mercury/tx";
+import { MsgUpdateAccount } from "./types/Mercury/tx";
 
 
 const types = [
-  ["/FloppyDisck.Mercury.Mercury.MsgUpdateReview", MsgUpdateReview],
-  ["/FloppyDisck.Mercury.Mercury.MsgDeletePurchase", MsgDeletePurchase],
   ["/FloppyDisck.Mercury.Mercury.MsgUpdatePurchase", MsgUpdatePurchase],
-  ["/FloppyDisck.Mercury.Mercury.MsgDeleteAccount", MsgDeleteAccount],
-  ["/FloppyDisck.Mercury.Mercury.MsgUpdateAccount", MsgUpdateAccount],
-  ["/FloppyDisck.Mercury.Mercury.MsgCreateReview", MsgCreateReview],
-  ["/FloppyDisck.Mercury.Mercury.MsgDeleteListing", MsgDeleteListing],
   ["/FloppyDisck.Mercury.Mercury.MsgCreateAccount", MsgCreateAccount],
+  ["/FloppyDisck.Mercury.Mercury.MsgCreateReview", MsgCreateReview],
+  ["/FloppyDisck.Mercury.Mercury.MsgDeletePurchase", MsgDeletePurchase],
   ["/FloppyDisck.Mercury.Mercury.MsgCreateListing", MsgCreateListing],
-  ["/FloppyDisck.Mercury.Mercury.MsgCreatePurchase", MsgCreatePurchase],
   ["/FloppyDisck.Mercury.Mercury.MsgDeleteReview", MsgDeleteReview],
   ["/FloppyDisck.Mercury.Mercury.MsgUpdateListing", MsgUpdateListing],
+  ["/FloppyDisck.Mercury.Mercury.MsgDeleteAccount", MsgDeleteAccount],
+  ["/FloppyDisck.Mercury.Mercury.MsgDeleteListing", MsgDeleteListing],
+  ["/FloppyDisck.Mercury.Mercury.MsgUpdateReview", MsgUpdateReview],
+  ["/FloppyDisck.Mercury.Mercury.MsgCreatePurchase", MsgCreatePurchase],
+  ["/FloppyDisck.Mercury.Mercury.MsgUpdateAccount", MsgUpdateAccount],
   
 ];
 
@@ -58,18 +58,18 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee=defaultFee, memo=null }: SignAndBroadcastOptions) => memo?client.signAndBroadcast(address, msgs, fee,memo):client.signAndBroadcast(address, msgs, fee),
-    msgUpdateReview: (data: MsgUpdateReview): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdateReview", value: data }),
-    msgDeletePurchase: (data: MsgDeletePurchase): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeletePurchase", value: data }),
     msgUpdatePurchase: (data: MsgUpdatePurchase): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdatePurchase", value: data }),
-    msgDeleteAccount: (data: MsgDeleteAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeleteAccount", value: data }),
-    msgUpdateAccount: (data: MsgUpdateAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdateAccount", value: data }),
-    msgCreateReview: (data: MsgCreateReview): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreateReview", value: data }),
-    msgDeleteListing: (data: MsgDeleteListing): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeleteListing", value: data }),
     msgCreateAccount: (data: MsgCreateAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreateAccount", value: data }),
+    msgCreateReview: (data: MsgCreateReview): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreateReview", value: data }),
+    msgDeletePurchase: (data: MsgDeletePurchase): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeletePurchase", value: data }),
     msgCreateListing: (data: MsgCreateListing): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreateListing", value: data }),
-    msgCreatePurchase: (data: MsgCreatePurchase): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreatePurchase", value: data }),
     msgDeleteReview: (data: MsgDeleteReview): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeleteReview", value: data }),
     msgUpdateListing: (data: MsgUpdateListing): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdateListing", value: data }),
+    msgDeleteAccount: (data: MsgDeleteAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeleteAccount", value: data }),
+    msgDeleteListing: (data: MsgDeleteListing): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgDeleteListing", value: data }),
+    msgUpdateReview: (data: MsgUpdateReview): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdateReview", value: data }),
+    msgCreatePurchase: (data: MsgCreatePurchase): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgCreatePurchase", value: data }),
+    msgUpdateAccount: (data: MsgUpdateAccount): EncodeObject => ({ typeUrl: "/FloppyDisck.Mercury.Mercury.MsgUpdateAccount", value: data }),
     
   };
 };

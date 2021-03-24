@@ -10,9 +10,26 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 )
 
+// GetTXReview returns the cli edit commands for this module
+func GetTXReview() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                        "review",
+		Short:                      "Review editing",
+		DisableFlagParsing:         true,
+		SuggestionsMinimumDistance: 2,
+		RunE:                       client.ValidateCmd,
+	}
+
+	cmd.AddCommand(CmdCreateReview())
+	cmd.AddCommand(CmdUpdateReview())
+	cmd.AddCommand(CmdDeleteReview())
+
+	return cmd
+}
+
 func CmdCreateReview() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-review [reviewType] [id] [score] [description]",
+		Use:   "create [reviewType] [id] [score] [description]",
 		Short: "Creates a new review",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -42,7 +59,7 @@ func CmdCreateReview() *cobra.Command {
 
 func CmdUpdateReview() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-review [id] [score] [description]",
+		Use:   "update [id] [score] [description]",
 		Short: "Update a review",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -74,7 +91,7 @@ func CmdUpdateReview() *cobra.Command {
 
 func CmdDeleteReview() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "delete-review [id]",
+		Use:   "delete [id]",
 		Short: "Delete a review by id",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

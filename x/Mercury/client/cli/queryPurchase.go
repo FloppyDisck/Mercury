@@ -107,7 +107,7 @@ func CmdShowPurchaseWithListing() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			listing, _ := strconv.ParseUint(args[0], 2, 64)
+			listing, _ := strconv.ParseUint(args[0], 10, 64)
 
 			params := &types.QueryAllPurchaseWithListingRequest{
 				Listing:    listing,
