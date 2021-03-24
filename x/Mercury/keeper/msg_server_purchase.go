@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"strconv"
 
 	"github.com/FloppyDisck/Mercury/x/Mercury/types"
@@ -32,10 +33,7 @@ func (k msgServer) CreatePurchase(goCtx context.Context, msg *types.MsgCreatePur
 		msg.Description,
 	)
 
-	payment, _ := sdk.ParseCoinNormalized(strconv.FormatUint(listing.Price.Amount, 10) + listing.Price.Currency)
-	if err := k.CoinKeeper.SendCoins(ctx, poll.Creator, moduleAcct, payment); err != nil {
-		return nil, err
-	}
+	//payment, _ := sdk.ParseCoinNormalized(strconv.FormatUint(listing.Price.Amount, 10) + listing.Price.Currency)
 
 	return &types.MsgCreatePurchaseResponse{
 		Id: id,
