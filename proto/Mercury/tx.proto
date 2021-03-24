@@ -8,6 +8,124 @@ option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateReview(MsgCreateReview) returns (MsgCreateReviewResponse);
+  rpc UpdateReview(MsgUpdateReview) returns (MsgUpdateReviewResponse);
+  rpc DeleteReview(MsgDeleteReview) returns (MsgDeleteReviewResponse);
+  rpc CreatePurchase(MsgCreatePurchase) returns (MsgCreatePurchaseResponse);
+  rpc UpdatePurchase(MsgUpdatePurchase) returns (MsgUpdatePurchaseResponse);
+  rpc DeletePurchase(MsgDeletePurchase) returns (MsgDeletePurchaseResponse);
+  rpc CreateListing(MsgCreateListing) returns (MsgCreateListingResponse);
+  rpc UpdateListing(MsgUpdateListing) returns (MsgUpdateListingResponse);
+  rpc DeleteListing(MsgDeleteListing) returns (MsgDeleteListingResponse);
+  rpc CreateAccount(MsgCreateAccount) returns (MsgCreateAccountResponse);
+  rpc UpdateAccount(MsgUpdateAccount) returns (MsgUpdateAccountResponse);
+  rpc DeleteAccount(MsgDeleteAccount) returns (MsgDeleteAccountResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgCreateReview {
+  string creator = 1;
+  string reviewType = 2;
+  uint64 reviewId = 3;
+  uint32 score = 4;
+  string description = 5;
+}
+
+message MsgCreateReviewResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateReview {
+  string creator = 1;
+  uint64 id = 2;
+  uint32 score = 3;
+  string description = 4;
+}
+
+message MsgUpdateReviewResponse { }
+
+message MsgDeleteReview {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteReviewResponse { }
+
+message MsgCreatePurchase {
+  string creator = 1;
+  uint64 listing = 2;
+  string description = 3;
+}
+
+message MsgCreatePurchaseResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdatePurchase {
+  string creator = 1;
+  uint64 id = 2;
+  string description = 5;
+}
+
+message MsgUpdatePurchaseResponse { }
+
+message MsgDeletePurchase {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeletePurchaseResponse { }
+
+message MsgCreateListing {
+  string creator = 1;
+  uint64 amount = 2;
+  string currency = 3;
+  string name = 4;
+  string description = 5;
+}
+
+message MsgCreateListingResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateListing {
+  string creator = 1;
+  uint64 id = 2;
+  uint64 amount = 3;
+  string currency = 4;
+  string name = 5;
+  string description = 6;
+}
+
+message MsgUpdateListingResponse { }
+
+message MsgDeleteListing {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteListingResponse { }
+
+message MsgCreateAccount {
+  string creator = 1;
+  string name = 2;
+}
+
+message MsgCreateAccountResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateAccount {
+  string creator = 1;
+  uint64 id = 2;
+  string name = 3;
+}
+
+message MsgUpdateAccountResponse { }
+
+message MsgDeleteAccount {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteAccountResponse { }

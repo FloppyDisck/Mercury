@@ -2,8 +2,8 @@ package keeper
 
 import (
 	// this line is used by starport scaffolding # 1
-
 	"github.com/FloppyDisck/Mercury/x/Mercury/types"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -20,6 +20,30 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 
 		switch path[0] {
 		// this line is used by starport scaffolding # 2
+		case types.QueryGetReview:
+			return getReview(ctx, path[1], k, legacyQuerierCdc)
+
+		case types.QueryListReview:
+			return listReview(ctx, k, legacyQuerierCdc)
+
+		case types.QueryGetPurchase:
+			return getPurchase(ctx, path[1], k, legacyQuerierCdc)
+
+		case types.QueryListPurchase:
+			return listPurchase(ctx, k, legacyQuerierCdc)
+
+		case types.QueryGetListing:
+			return getListing(ctx, path[1], k, legacyQuerierCdc)
+
+		case types.QueryListListing:
+			return listListing(ctx, k, legacyQuerierCdc)
+
+		case types.QueryGetAccount:
+			return getAccount(ctx, path[1], k, legacyQuerierCdc)
+
+		case types.QueryListAccount:
+			return listAccount(ctx, k, legacyQuerierCdc)
+
 		default:
 			err = sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unknown %s query endpoint: %s", types.ModuleName, path[0])
 		}

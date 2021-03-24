@@ -1,0 +1,17 @@
+syntax = "proto3";
+package FloppyDisck.Mercury.Mercury;
+
+option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
+
+import "gogoproto/gogo.proto";
+
+message Price {
+  uint64 amount = 1;
+  string currency = 2;
+}
+
+message AvgReview {
+  uint32 average = 1;
+  uint32 count = 2;
+  uint32 sum = 3;
+}

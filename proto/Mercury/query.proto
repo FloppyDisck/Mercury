@@ -4,12 +4,199 @@ package FloppyDisck.Mercury.Mercury;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "Mercury/review.proto";
+import "Mercury/purchase.proto";
+import "Mercury/listing.proto";
+import "Mercury/account.proto";
 
 option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
 
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+	rpc Review(QueryGetReviewRequest) returns (QueryGetReviewResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/review/{id}";
+	}
+	rpc ReviewAll(QueryAllReviewRequest) returns (QueryAllReviewResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/review";
+	}
+	rpc ReviewWithScore(QueryAllReviewWithScoreRequest) returns (QueryAllReviewResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/review/score/{score}";
+	}
+	rpc ReviewWithReviewer(QueryAllReviewWithReviewerRequest) returns (QueryAllReviewResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/review/reviewer/{creator}";
+	}
+	rpc ReviewWithReviewed(QueryAllReviewWithReviewedRequest) returns (QueryAllReviewResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/review/from/{type}/{id}";
+	}
+
+	rpc Purchase(QueryGetPurchaseRequest) returns (QueryGetPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase/{id}";
+	}
+	rpc PurchaseAll(QueryAllPurchaseRequest) returns (QueryAllPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase";
+	}
+	rpc PurchaseWithListing(QueryAllPurchaseWithListingRequest) returns (QueryAllPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase/listing/{listing}";
+	}
+	rpc PurchaseWithBuyer(QueryAllPurchaseWithBuyerRequest) returns (QueryAllPurchaseResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/purchase/buyer/{buyer}";
+	}
+
+	rpc Listing(QueryGetListingRequest) returns (QueryGetListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/{id}";
+	}
+	rpc ListingAll(QueryAllListingRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing";
+	}
+	rpc ListingWithSeller(QueryAllListingWithSellerRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/seller/{seller}";
+	}
+	rpc ListingWithReview(QueryAllListingWithReviewRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/review/{review}";
+	}
+	rpc ListingWithName(QueryAllListingWithNameRequest) returns (QueryAllListingResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/listing/name/{name}";
+	}
+
+	rpc Account(QueryGetAccountRequest) returns (QueryGetAccountResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/account/{id}";
+	}
+	rpc AccountWallet(QueryGetAccountWithWalletRequest) returns (QueryGetAccountResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/account/wallet/{user}";
+	}
+	rpc AccountAll(QueryAllAccountRequest) returns (QueryAllAccountResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/account";
+	}
+	rpc AccountWithName(QueryAllAccountWithNameRequest) returns (QueryAllAccountResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/account/name/{name}";
+	}
+	rpc AccountWithReview(QueryAllAccountWithReviewRequest) returns (QueryAllAccountResponse) {
+		option (google.api.http).get = "/FloppyDisck/Mercury/Mercury/account/review/{review}";
+	}
+
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetReviewRequest {
+	uint64 id = 1;
+}
+
+message QueryGetReviewResponse {
+	Review Review = 1;
+}
+
+message QueryAllReviewRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllReviewWithScoreRequest {
+	uint32 score = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllReviewWithReviewerRequest {
+	string creator = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllReviewWithReviewedRequest {
+	string type = 1;
+	uint64 id = 2;
+	cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+
+message QueryAllReviewResponse {
+	repeated Review Review = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetPurchaseRequest {
+	uint64 id = 1;
+}
+
+message QueryGetPurchaseResponse {
+	Purchase Purchase = 1;
+}
+
+message QueryAllPurchaseRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPurchaseWithListingRequest {
+	uint64 listing = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllPurchaseWithBuyerRequest {
+	string buyer = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllPurchaseResponse {
+	repeated Purchase Purchase = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryGetListingRequest {
+	uint64 id = 1;
+}
+
+message QueryGetListingResponse {
+	Listing Listing = 1;
+}
+
+message QueryAllListingRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllListingWithSellerRequest {
+	string seller = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllListingWithReviewRequest {
+	uint32 review = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllListingWithNameRequest {
+	string name = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllListingResponse {
+	repeated Listing Listing = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+
+message QueryGetAccountRequest {
+	uint64 id = 1;
+}
+
+message QueryGetAccountWithWalletRequest {
+	string user = 1;
+}
+
+message QueryGetAccountResponse {
+	Account Account = 1;
+}
+
+message QueryAllAccountRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAccountWithNameRequest {
+	string name = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllAccountWithReviewRequest {
+	uint32 review = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllAccountResponse {
+	repeated Account Account = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

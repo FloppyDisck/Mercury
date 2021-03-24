@@ -20,3 +20,46 @@ const (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
+
+// GetStringBytes Turns strings to Bytes
+func GetStringBytes(str string) []byte {
+	bz := KeyPrefix(str)
+	return bz
+}
+
+// GetBytesString Turns bytes into a string
+func GetBytesString(bz []byte) string {
+	return string(bz)
+}
+
+const (
+	AccountKey       = "Account-value-"
+	AccountNameKey   = "Account-name-"
+	AccountReviewKey = "Account-review-"
+	AccountWalletKey = "Account-wallet-"
+	AccountCountKey  = "Account-count-"
+)
+
+const (
+	ListingKey       = "Listing-value-"
+	ListingSellerKey = "Listing-seller-"
+	ListingReviewKey = "Listing-review-"
+	ListingNameKey   = "Listing-name-"
+	ListingCountKey  = "Listing-count-"
+)
+
+const (
+	PurchaseKey               = "Purchase-value-"
+	PurchaseListingKey        = "Purchase-listing-"
+	PurchaseListingCreatorKey = "Purchase-listing-creator-"
+	PurchaseBuyerKey          = "Purchase-buyer-key-"
+	PurchaseCountKey          = "Purchase-count-"
+)
+
+const (
+	ReviewKey         = "Review-value-"
+	ReviewScoreKey    = "Review-score-"
+	ReviewReviewerKey = "Review-reviewer-"
+	ReviewReviewedKey = "Review-reviewed-"
+	ReviewCountKey    = "Review-count-"
+)

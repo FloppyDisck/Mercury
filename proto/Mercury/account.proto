@@ -1,0 +1,15 @@
+syntax = "proto3";
+package FloppyDisck.Mercury.Mercury;
+
+option go_package = "github.com/FloppyDisck/Mercury/x/Mercury/types";
+
+import "gogoproto/gogo.proto";
+
+import "Mercury/util.proto";
+
+message Account {
+  string creator = 1;
+  uint64 id = 2;
+  string name = 3;
+  AvgReview review = 4;
+}
