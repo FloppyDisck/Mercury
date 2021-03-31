@@ -320,7 +320,7 @@ func New(
 	app.EvidenceKeeper = *evidenceKeeper
 
 	app.MercuryKeeper = *Mercurykeeper.NewKeeper(
-		appCodec, keys[Mercurytypes.StoreKey], keys[Mercurytypes.MemStoreKey],
+		appCodec, keys[Mercurytypes.StoreKey], keys[Mercurytypes.MemStoreKey], app.AccountKeeper, app.BankKeeper,
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
@@ -365,7 +365,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
-		Mercury.NewAppModule(appCodec, app.MercuryKeeper),
+		Mercury.NewAppModule(appCodec, app.MercuryKeeper, app.AccountKeeper, app.BankKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 

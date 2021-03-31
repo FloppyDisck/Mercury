@@ -451,7 +451,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title Mercury/query.proto
+ * @title Mercury/account.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

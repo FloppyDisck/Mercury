@@ -32,6 +32,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 
 		case *types.MsgCreatePurchase:
 			res, err := msgServer.CreatePurchase(sdk.WrapSDKContext(ctx), msg)
+
 			return sdk.WrapServiceResult(ctx, res, err)
 
 		case *types.MsgUpdatePurchase:

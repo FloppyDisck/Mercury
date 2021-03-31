@@ -3,13 +3,10 @@ package keeper
 import (
 	"context"
 	"fmt"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"strconv"
-
 	"github.com/FloppyDisck/Mercury/x/Mercury/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tendermint/tendermint/crypto"
+	"strconv"
 )
 
 func (k msgServer) CreatePurchase(goCtx context.Context, msg *types.MsgCreatePurchase) (*types.MsgCreatePurchaseResponse, error) {
@@ -21,9 +18,6 @@ func (k msgServer) CreatePurchase(goCtx context.Context, msg *types.MsgCreatePur
 
 	listing := k.GetListing(ctx, msg.Listing)
 
-	//TODO: substract listing price from account
-	//TODO: encrypt description
-
 	id := k.AppendPurchase(
 		ctx,
 		msg.Creator,
@@ -33,7 +27,25 @@ func (k msgServer) CreatePurchase(goCtx context.Context, msg *types.MsgCreatePur
 		msg.Description,
 	)
 
-	//payment, _ := sdk.ParseCoinNormalized(strconv.FormatUint(listing.Price.Amount, 10) + listing.Price.Currency)
+	payment, parseErr := sdk.ParseCoinsNormalized(strconv.FormatUint(listing.Price.Amount, 10) + listing.Price.Currency)
+	if parseErr != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, fmt.Sprintf("Invalid coin valaue", nil))
+	}
+
+	buyer, buyerErr := sdk.AccAddressFromBech32(msg.Creator)
+	if buyerErr != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, fmt.Sprintf("Account %s doesn't exist", msg.Creator))
+	}
+
+	seller, sellerErr := sdk.AccAddressFromBech32(listing.Creator)
+	if sellerErr != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, fmt.Sprintf("Account %s doesn't exist", listing.Creator))
+	}
+
+	sendErr := k.bk.SendCoins(ctx, buyer, seller, payment)
+	if sendErr != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, fmt.Sprintf("Invalid funds", nil))
+	}
 
 	return &types.MsgCreatePurchaseResponse{
 		Id: id,
